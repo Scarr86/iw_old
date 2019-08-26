@@ -1,0 +1,47 @@
+<p>
+    {{date}}
+</p>
+<div class="container">
+    <form [formGroup]='formGroup' (ngSubmit)='save()'>
+
+        <div formArrayName="arrayFormGroups">
+            <div [class.mat-elevation-z2]="'true'" class="form-item" *ngFor="let formGroup of arrayFormGroups.controls; index as i" [formGroupName]="i">
+                <p>
+                    {{i+1}} Form Group
+                </p>
+                <mat-form-field>
+                    <input formControlName="itemName" type="text" matInput placeholder="товар">
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="price" type="text" matInput placeholder="цена">
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="number" type="text" matInput placeholder="количество">
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <mat-form-field>
+            <input formControlName='sale' type="number" matInput placeholder="скидка">
+            <!-- <mat-hint>Errors appear instantly!</mat-hint> -->
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input formControlName='total' type="number" matInput placeholder="сумма">
+        </mat-form-field>
+        <br>
+
+        <button type="submit" [disabled]='!isSave' mat-raised-button color="primary">Сохранить</button>
+    </form>
+</div>
+<p>
+    isSave: {{isSave}}
+</p>
+<p>
+    <button type="button" (click)='addItems()' mat-raised-button color="primary">add</button>
+</p>
+<p>
+    <button type="button" (click)='getData()' mat-raised-button color="primary">data</button>
+</p>

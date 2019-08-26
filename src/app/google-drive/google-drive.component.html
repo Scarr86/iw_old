@@ -1,0 +1,10 @@
+<p>google-drive works!</p>
+
+<button (click)="signIn()" *ngIf="!isLoggedIn()"  mat-raised-button color="primary">Sign In</button>
+<button (click)="signOut()" *ngIf="isLoggedIn()" mat-raised-button color="primary">Sign Out</button>
+<button (click)="getUser()"  mat-raised-button color="primary">Get User</button>
+<br>
+<button (click)="getFileList()" *ngIf="isLoggedIn()" mat-raised-button color="primary">Get file list</button>
+<br>
+<!-- <button (click)="signIn()" [style.display]="isSigned? 'none':'block'" mat-raised-button color="primary">Sing In</button> -->
+<!-- <button (click)="signOut()" [style.display]="!isSigned? 'none':'block'" mat-raised-button color="primary">Sing Out</button> -->

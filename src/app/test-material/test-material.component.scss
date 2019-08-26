@@ -1,0 +1,37 @@
+// @import '~@angular/material/theming';
+
+// @mixin my-div-theme($theme) {
+//     $primary: map-get($theme , primary);
+//     $accent: map-get($theme , accent);
+//     $warn: map-get($theme , warn);
+//     $foreground:map-get($theme , foreground);
+//     $background:map-get($theme , background );
+
+//     app-test-material {
+//         >div{
+//             background-color: mat-color($primary, lighter);
+//             >h1{
+//                 color: mat-color($primary);
+//             }
+
+//         }
+
+//     }
+
+
+    
+// }
+
+
+@import '~@angular/material/theming';
+// Выбираем тему  и указываем код оттенка, создается переменная с этим цветом
+$app-accent: mat-color($mat-grey, 800);
+$app-accent-text: mat-color($mat-grey, A200);
+.my-div{
+    background-color: $app-accent;
+}
+h2{
+    color: $app-accent-text;
+
+}
+

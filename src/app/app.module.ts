@@ -1,16 +1,59 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { MaterialModule } from './meterial.module';
+import { TestMaterialComponent } from './test-material/test-material.component';
+
+import { HttpClientModule } from '@angular/common/http';
+import { GoogleDriveComponent } from './google-drive/google-drive.component';
+
+import {
+  GoogleApiModule,
+  GoogleApiService,
+  GoogleAuthService,
+  NgGapiClientConfig,
+  NG_GAPI_CONFIG,
+  GoogleApiConfig
+} from "ng-gapi";
+import { DataFormComponent } from './data-form/data-form.component';
+
+
+let gapiClientConfig: NgGapiClientConfig = {
+  client_id: '843806706192-trsuvvlpi50vohsul3imgjl20o7fnbuo.apps.googleusercontent.com',
+  discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+  ux_mode: "popup",
+  // redirect_uri: "https://ng-gapi-example.stackblitz.io/redirect",
+  scope: [
+    'https://www.googleapis.com/auth/drive'
+  ].join(" "),
+
+};
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TestMaterialComponent,
+    GoogleDriveComponent,
+    DataFormComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    MaterialModule,
+    HttpClientModule,
+    GoogleApiModule.forRoot({
+      provide: NG_GAPI_CONFIG,
+      useValue: gapiClientConfig
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
