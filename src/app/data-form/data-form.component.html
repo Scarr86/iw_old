@@ -1,47 +1,72 @@
-<p>
-    {{date}}
-</p>
 <div class="container">
+    <p>
+        <span>Дата:</span> {{data.getDateToStr()}}
+    </p>
+    <p>
+        <button type="button" (click)='addItems()' mat-raised-button color="accent">add</button>
+    </p>
+
+
     <form [formGroup]='formGroup' (ngSubmit)='save()'>
 
         <div formArrayName="arrayFormGroups">
-            <div [class.mat-elevation-z2]="'true'" class="form-item" *ngFor="let formGroup of arrayFormGroups.controls; index as i" [formGroupName]="i">
-                <p>
+            <div [class.mat-elevation-z2]="'true'" class="form-item"
+                *ngFor="let formGroup of arrayFormGroups.controls; index as i" [formGroupName]="i">
+                <!-- <p>
                     {{i+1}} Form Group
-                </p>
+                </p> -->
                 <mat-form-field>
-                    <input formControlName="itemName" type="text" matInput placeholder="товар">
+                    <input formControlName="itemName" [matAutocomplete]="auto" autocomplete="off" type="text" matInput
+                        placeholder="товар">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of options" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
-                <mat-form-field>
-                    <input formControlName="price" type="text" matInput placeholder="цена">
-                </mat-form-field>
-                <mat-form-field>
-                    <input formControlName="number" type="text" matInput placeholder="количество">
-                </mat-form-field>
+
+                <div>
+                    <mat-form-field>
+                        <input formControlName="price" autocomplete="off" type="number" matInput placeholder="цена">
+                    </mat-form-field>
+                    <mat-form-field style="width: 50px">
+                        <input formControlName="num" autocomplete="off" type="number" matInput placeholder="кол">
+                    </mat-form-field>
+                </div>
+
+                <div style="width: 100%;"></div>
+                <div (click)="deleteItem(i)" class="with-icon">
+                    <mat-icon inline='false' color="primary" svgIcon="delete"> </mat-icon>
+                    <span> Удалить </span>
+                </div>
+                <!-- <mat-divider color="accent"></mat-divider> -->
+
             </div>
 
         </div>
 
         <mat-form-field>
-            <input formControlName='sale' type="number" matInput placeholder="скидка">
+            <input formControlName='sale' autocomplete="off" type="number" matInput placeholder="скидка">
             <!-- <mat-hint>Errors appear instantly!</mat-hint> -->
         </mat-form-field>
         <br>
 
         <mat-form-field>
-            <input formControlName='total' type="number" matInput placeholder="сумма">
+            <input [readonly]='true' formControlName='total' autocomplete="off" type="number" matInput
+                placeholder="сумма">
         </mat-form-field>
         <br>
 
-        <button type="submit" [disabled]='!isSave' mat-raised-button color="primary">Сохранить</button>
+        <button type="submit" [disabled]='!formGroup.valid' mat-raised-button color="accent">Сохранить</button>
     </form>
+    <p>
+        isSave: {{formGroup.valid}}
+    </p>
+
+    <p>
+        <button type="button" (click)='getData()' mat-raised-button color="accent">data</button>
+    </p>
+    <pre>
+{{data.printfData()}}
+</pre>
 </div>
-<p>
-    isSave: {{isSave}}
-</p>
-<p>
-    <button type="button" (click)='addItems()' mat-raised-button color="primary">add</button>
-</p>
-<p>
-    <button type="button" (click)='getData()' mat-raised-button color="primary">data</button>
-</p>

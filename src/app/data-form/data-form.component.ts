@@ -1,7 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { isNull } from 'util';
-import { Data, Item, DataService } from '../data.service';
+import { FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { DataService } from '../data.service';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Data, Item } from '../data';
+
+
+
 
 @Component({
   selector: 'app-data-form',
@@ -9,89 +14,73 @@ import { Data, Item, DataService } from '../data.service';
   styleUrls: ['./data-form.component.scss']
 })
 export class DataFormComponent implements OnInit {
-
-  date: string;
+  
   formGroup: FormGroup;
-  isSave: boolean;
-
   data: Data;
   item: Item;
 
-  constructor(private cdr: ChangeDetectorRef, private dataServise: DataService) { }
+  options: string[] = ['One', 'Two', 'Three'];
+  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef, private dataServise: DataService) {
+    let ico = iconRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_delete_24px.svg'));
+  }
 
   ngOnInit() {
-    let d = new Date();
-    this.date = d.getFullYear() + "-" + (d.getMonth() + 1) + '-' + d.getDate();
+    this.data = this.dataServise.data;
+    this.data.date =  Date.now();
 
     this.formGroup = new FormGroup({
 
       "arrayFormGroups": new FormArray([
         new FormGroup({
-          "itemName": new FormControl("item", Validators.minLength(5)),
-          "price": new FormControl("100", Validators.min(1)),
-          "number": new FormControl("1", Validators.min(1))
+          "itemName": new FormControl(''),
+          "price": new FormControl('0'),
+          "num": new FormControl('0')
         })
       ]),
-      "sale": new FormControl("50", Validators.min(0)),
-      "total": new FormControl("", Validators.min(0))
+      "sale": new FormControl(this.data.sale),
+      "total": new FormControl(this.data.total, [Validators.min(0)])
 
     });
-    this.formGroup.get('total').setValue(this.getTotal());
-
-    this.item = new Item(this.getItemName(0), this.getPrice(0), this.getNum(0));
-    this.data = new Data(this.item, this.formGroup.get("sale").value, this.formGroup.get("total").value);
-    this.dataServise.data = this.data;
-
-
-
-
-
 
     this.formGroup.statusChanges.subscribe(stat => {
-      this.isSave = stat == "VALID" ? true : false;
-
+      //this.isSave = stat == "VALID" ? true : false;
+      //console.log(this.formGroup.valid);
       //this.cdr.detectChanges();
-      console.log(stat);
-
+      //console.log(stat, this.formGroup.controls["total"].value );
     });
 
-    this.formGroup.valueChanges.subscribe(val => {
-      let price:number = this.getPrice(0);
-      if(isNaN(price)) return;
-      console.log(price);
-      
-      
-
-      if (+this.formGroup.get('total').value != this.getTotal())
-        this.formGroup.get('total').setValue(this.getTotal());
-
-      if (isNull(val['sale'])) val['sale'] = 0;
-      if (isNull(val['sale']) || isNaN(val['sale']) || val['sale'] < 0)
-        this.formGroup.controls['sale'].setValue(0);
-      // console.log(val);
-
+    this.formGroup.get('arrayFormGroups').valueChanges.subscribe((items: any[]) => {
+      this.data.items = items
+        .filter((val): Item | boolean => {
+          if (val.num * val.price)
+            return { name: val.itemName, num: val.num, price: val.price };
+          else return false;
+        });
+      this.formGroup.get("total").setValue(this.data.getTotal());
     });
 
+
+    this.formGroup.get("total").valueChanges.subscribe((value: number) => {
+      this.data.total = value;
+    });
+
+    this.formGroup.get("sale").valueChanges.subscribe((value: number) => {
+      this.data.sale = value;
+      this.formGroup.get('total').setValue(this.data.getTotal());
+    });
   }
 
-  getTotal(): number {
-    let sum: number = this.arrayFormGroups.controls.reduce((sum: number, group: FormGroup) => {
-      sum += +group.get("price").value * +group.get("number").value;
-      return sum;
-    }, 0);
-    sum -= this.formGroup.get('sale').value as number;
-    return sum;
-  }
 
   save() {
-    this.isSave = true;
-    console.log(this.formGroup.value);
   }
+
   addItems() {
+    let item: Item = new Item();
+    this.data.items.push(item);
     this.arrayFormGroups.push(new FormGroup({
-      "itemName": new FormControl("", Validators.minLength(1)),
-      "price": new FormControl("100", Validators.min(1)),
-      "number": new FormControl("1", Validators.min(1))
+      "itemName": new FormControl(item.name),
+      "price": new FormControl(item.price),
+      "num": new FormControl(item.num)
     }));
   }
 
@@ -99,18 +88,15 @@ export class DataFormComponent implements OnInit {
     return this.formGroup.get('arrayFormGroups') as FormArray;
   }
 
-  getItemName(i: number): any {
-    return this.arrayFormGroups.controls[i].get("itemName")['value'];
-  }
-  getPrice(i: number): any {
-    return this.arrayFormGroups.controls[i].get("price")['value'];
-  }
-  getNum(i: number): any {
-    return this.arrayFormGroups.controls[i].get("number")['value'];
+  getData() {
+   console.log(
+     this.data.printfData()
+   );
   }
 
-  getData() {
-    this.dataServise.printfData();
+  deleteItem(i: number) {
+    this.arrayFormGroups.removeAt(i);
   }
+
 
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
@@ -22,18 +22,19 @@ import {
   GoogleApiConfig
 } from "ng-gapi";
 import { DataFormComponent } from './data-form/data-form.component';
+import { HistoryComponent } from './history/history.component';
 
 
-let gapiClientConfig: NgGapiClientConfig = {
-  client_id: '843806706192-trsuvvlpi50vohsul3imgjl20o7fnbuo.apps.googleusercontent.com',
-  discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
-  ux_mode: "popup",
-  // redirect_uri: "https://ng-gapi-example.stackblitz.io/redirect",
-  scope: [
-    'https://www.googleapis.com/auth/drive'
-  ].join(" "),
+// let gapiClientConfig: NgGapiClientConfig = {
+//   client_id: '843806706192-trsuvvlpi50vohsul3imgjl20o7fnbuo.apps.googleusercontent.com',
+//   discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+//   ux_mode: "popup",
+//   // redirect_uri: "https://ng-gapi-example.stackblitz.io/redirect",
+//   scope: [
+//     'https://www.googleapis.com/auth/drive'
+//   ].join(" "),
 
-};
+// };
 
 
 @NgModule({
@@ -41,7 +42,8 @@ let gapiClientConfig: NgGapiClientConfig = {
     AppComponent,
     TestMaterialComponent,
     GoogleDriveComponent,
-    DataFormComponent
+    DataFormComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -50,10 +52,11 @@ let gapiClientConfig: NgGapiClientConfig = {
     AppRoutingModule,
     MaterialModule,
     HttpClientModule,
-    GoogleApiModule.forRoot({
-      provide: NG_GAPI_CONFIG,
-      useValue: gapiClientConfig
-    })
+    FormsModule,
+    // GoogleApiModule.forRoot({
+    //   provide: NG_GAPI_CONFIG,
+    //   useValue: gapiClientConfig
+    // })
   ],
   providers: [],
   bootstrap: [AppComponent]

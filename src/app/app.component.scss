@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+@import '../styles.scss';
+
+
+.mat-tab-label-active{
+    color: mat-color($accent, 800);
+}
+.my{
+    color: mat-color($accent) !important;
+}

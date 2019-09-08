@@ -1,9 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { GoogleAuth2Service } from '../google-auth2.service';
-import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
-import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
+// import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
+// import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
-import GoogleUser = gapi.auth2.GoogleUser;
+import { GoogleDriveService } from '../google-drive.service';
+import { concatMap, delay, mergeMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { MatTextareaAutosize } from '@angular/material/input';
+import { FormControl, FormControlName } from '@angular/forms';
+
+export class File {
+  id: string;
+  name: string;
+  mimeType: string;
+}
 
 @Component({
   selector: 'app-google-drive',
@@ -13,57 +23,129 @@ import GoogleUser = gapi.auth2.GoogleUser;
 export class GoogleDriveComponent implements OnInit {
 
   isSigned: boolean = false;
+
+
+  files: File[] = [];
+  editFile: File;
+
+
   constructor(
     private auth2: GoogleAuth2Service, // my realizacia
     private cdr: ChangeDetectorRef, // ChangeDetectorRef проверяет все переменные для компонента и его дитей и перересовывает страницу
-    private authService: GoogleAuthService,
-    private gapiService: GoogleApiService,
-    private ngGapiAuth2: NgGapiAuth2Service // my with ng-gapi
-
+    private drive: GoogleDriveService
   ) {
     console.log('GoogleDriveComponent');
 
-    // this.gapiService.onLoad().subscribe((value) => {
-    //   console.log('onLoad', value);
-    // });
   }
 
   ngOnInit() {
-    this.auth2.initClient.subscribe(
-      (isSigned: boolean) => {
-        this.isSigned = isSigned;
-        this.cdr.detectChanges();
-        console.log('isSigned ', this.isSigned);
-      }
-    );
-  }
-  signIn() {
-    this.auth2.signIn();
-    // this.ngGapiAuth2.signIn();
+    this.auth2.initClient().subscribe(() => {
+
+      console.log("init Client");
+      this.cdr.detectChanges();
+    },
+      () => console.log("ERROR INIT CLIENT"));
   }
 
+  signIn() {
+    this.auth2.signIn().subscribe(() => {
+      console.log("signIn");
+      // this.cdr.detectChanges();
+    },
+      () => console.log("EROOR SIGNIN"));
+    // this.ngGapiAuth2.signIn();
+    // this.cdr.detectChanges();
+  }
   signOut() {
-    this.auth2.signOut();
+    this.auth2.signOut().subscribe(() => {
+      // this.cdr.detectChanges();
+      console.log("signOut");
+
+    },
+      () => console.log("ERROR SIGNOUT"));
     // this.ngGapiAuth2.signOut();
   }
+
   isLoggedIn(): boolean {
-    //console.log('isSigned ', this.auth2.isSigned());
-    return this.auth2.isSigned();
-
-    return this.ngGapiAuth2.isUserSignedIn();
+    return this.auth2.isSignedIn();
   }
 
-  getUser() {
-    let User:GoogleUser = this.ngGapiAuth2.getCurrentUser();
-    console.log(JSON.stringify(User, null, 2));
-  }
 
 
   /******************************************************* */
+  // @ViewChild('ta', { static: false }) ta: MatTextareaAutosize;
 
-  getFileList() {
+
+  fcTextarea: FormControl = new FormControl("");
+  fcName: FormControl = new FormControl("");
+
+  update() {
+    if (this.editFile)
+      this.drive.udate(this.editFile.id, this.fcTextarea.value).subscribe();
+    else console.log("Не выбран файл");
+    
+  }
+
+  createFile() {
+    this.drive.createFile(this.fcName.value, this.fcTextarea.value).subscribe(res=>{
+      this.editFile = res;
+    });
 
   }
+
+
+
+  getText(file: File) {
+    this.editFile = file;
+    this.drive.getTextFile(file.id, file.mimeType).subscribe(text => {
+      this.fcTextarea.setValue(text);
+      this.fcName.setValue(file.name);
+      this.cdr.detectChanges();
+    });
+  }
+
+  getList() {
+    this.drive.getList()
+      .subscribe(files => {
+        this.files = files;
+        this.cdr.detectChanges();
+      });
+  }
+  clearList() {
+    this.files = null;
+
+
+    // this.example.subscribe(val =>
+    //     console.log(`With concatMap: ${val}`)
+    //   );
+    // this.mergeMapExample
+    //   .subscribe(val => console.log(`With mergeMap: ${val}`));
+
+  }
+
+  // RxJS v6+
+
+  //emit delay value
+  source = of(2000, 1000);
+  // map value from source into inner observable, when complete emit result and move to next
+  example = this.source.pipe(
+    tap(val => console.log(val)),
+    concatMap(val => of(`Delayed by: ${val}ms`).pipe(delay(val)))
+  );
+  //output: With concatMap: Delayed by: 2000ms, With concatMap: Delayed by: 1000ms
+  //  subscribe = this.example.subscribe(val =>
+  //   console.log(`With concatMap: ${val}`)
+  // );
+
+  // showing the difference between concatMap and mergeMap
+  mergeMapExample = this.source
+    .pipe(
+      // just so we can log this after the first example has run
+      // delay(5000),
+      mergeMap(val => of(`Delayed by: ${val}ms`).pipe(delay(val)))
+    )
+  // .subscribe(val => console.log(`With mergeMap: ${val}`));
+
 
 
 

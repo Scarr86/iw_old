@@ -2,3 +2,17 @@
 button{
     margin: 10px;
 }
+mat-grid-tile {
+    background: lightblue;
+  }
+
+  .container{
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+  }
+  .list{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+  }

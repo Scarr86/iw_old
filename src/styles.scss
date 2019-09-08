@@ -15,20 +15,31 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$candy-app-primary: mat-palette($mat-indigo);
-$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$primary: mat-palette($mat-grey);
+$accent:  mat-palette($mat-light-blue, 800, A100, A400);
 
 // The warn palette is optional (defaults to red).
 // $candy-app-warn:    mat-palette($mat-red);
-$candy-app-warn:    mat-palette($mat-blue);
+$warn:    mat-palette($mat-pink );
 
 // Create the theme object (a Sass map containing all of the palettes).
 
-$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
-// $candy-app-theme: mat-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+// $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+$theme: mat-dark-theme($primary, $accent, $warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($candy-app-theme);
+@include angular-material-theme($theme);
 //  @include my-comp-theme($candy-app-theme)
+
+body{
+    background: mat-color($primary, 900);
+    color: mat-color($primary, 50);
+    margin: 0px;
+}
+// .mat-tab-label-active{
+//     color: mat-color($accent, 800);
+// }
+
+

@@ -1,23 +1,38 @@
-// .container{
-//     display: flex;
-//     flex-direction: column;
-// }
+@import '~@angular/material/theming';
+@import '../../styles.scss';
 mat-form-field{
-    margin: 10px;
+    margin-right: 10px;
+
+}
+form{
+    width: 100%;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    
 }
 .form-item{
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    background: mat-color($primary, 800);
+    // margin-bottom: 10px;
     padding: 5px;
+    margin-bottom: 5px;
+    // background-color: mat-color($candy-app-primary, 800);
 }
 
+.with-icon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.container{
+    margin: 50px;
+}
 
 @media screen and  (min-width: 600px){
     .form-item{

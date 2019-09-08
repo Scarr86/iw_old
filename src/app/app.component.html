@@ -2,6 +2,28 @@
 
 <!-- <app-google-drive></app-google-drive> -->
 
-<app-data-form></app-data-form>
+<!--  -->
+<mat-tab-group color="accent" animationDuration="0ms">
+    <mat-tab label="Drive">
+        <app-google-drive></app-google-drive>
+    </mat-tab>
+    <mat-tab #tab label="History">
+        <!-- <ng-template mat-tab-label> -->
+        <!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
+        <!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
+        <!-- <div [ngClass]=" {my:tab.isActive}" > -->
+        <!-- Second -->
+        <!-- </div> -->
+        <!-- </ng-template> -->
+        <app-history></app-history>
+    </mat-tab>
+    <mat-tab label="Add">
+        <app-data-form></app-data-form>
+    </mat-tab>
+
+
+</mat-tab-group>
+
+
 
 <router-outlet></router-outlet>

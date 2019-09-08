@@ -1,0 +1,721 @@
+[
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 1,
+        "day": 1
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 2,
+        "day": 2
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 400,
+          "num": 5
+        },
+        {
+          "name": "водолозки",
+          "price": 800,
+          "num": 2
+        },
+        {
+          "name": "бриджи",
+          "price": 700,
+          "num": 5
+        },
+        {
+          "name": "майки",
+          "price": 600,
+          "num": 2
+        },
+        {
+          "name": "футболки",
+          "price": 300,
+          "num": 5
+        }
+      ],
+      "sale": 980,
+      "total": 8820
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 3,
+        "day": 3
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 300,
+          "num": 5
+        }
+      ],
+      "sale": 150,
+      "total": 1350
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 4,
+        "day": 4
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 5,
+        "day": 5
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 600,
+          "num": 5
+        },
+        {
+          "name": "футболки",
+          "price": 800,
+          "num": 1
+        },
+        {
+          "name": "бриджи",
+          "price": 100,
+          "num": 1
+        },
+        {
+          "name": "майки",
+          "price": 300,
+          "num": 3
+        },
+        {
+          "name": "штаны",
+          "price": 100,
+          "num": 2
+        }
+      ],
+      "sale": 500,
+      "total": 4500
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 6,
+        "day": 6
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 900,
+          "num": 3
+        },
+        {
+          "name": "майки",
+          "price": 300,
+          "num": 3
+        },
+        {
+          "name": "бриджи",
+          "price": 400,
+          "num": 4
+        },
+        {
+          "name": "футболки",
+          "price": 500,
+          "num": 3
+        }
+      ],
+      "sale": 0,
+      "total": 6700
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 0,
+        "day": 7
+      },
+      "items": [
+        {
+          "name": "майки",
+          "price": 900,
+          "num": 4
+        },
+        {
+          "name": "водолозки",
+          "price": 900,
+          "num": 5
+        },
+        {
+          "name": "бриджи",
+          "price": 300,
+          "num": 4
+        },
+        {
+          "name": "штаны",
+          "price": 200,
+          "num": 3
+        },
+        {
+          "name": "футболки",
+          "price": 600,
+          "num": 1
+        }
+      ],
+      "sale": 0,
+      "total": 10500
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 1,
+        "day": 8
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 900,
+          "num": 2
+        },
+        {
+          "name": "футболки",
+          "price": 600,
+          "num": 2
+        },
+        {
+          "name": "штаны",
+          "price": 800,
+          "num": 5
+        }
+      ],
+      "sale": 0,
+      "total": 7000
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 2,
+        "day": 9
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 900,
+          "num": 4
+        }
+      ],
+      "sale": 0,
+      "total": 3600
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 3,
+        "day": 10
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 100,
+          "num": 1
+        }
+      ],
+      "sale": 10,
+      "total": 90
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 4,
+        "day": 11
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 800,
+          "num": 2
+        }
+      ],
+      "sale": 160,
+      "total": 1440
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 5,
+        "day": 12
+      },
+      "items": [
+        {
+          "name": "бриджи",
+          "price": 200,
+          "num": 1
+        },
+        {
+          "name": "штаны",
+          "price": 1000,
+          "num": 4
+        },
+        {
+          "name": "майки",
+          "price": 400,
+          "num": 3
+        }
+      ],
+      "sale": 0,
+      "total": 5400
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 6,
+        "day": 13
+      },
+      "items": [
+        {
+          "name": "футболки",
+          "price": 300,
+          "num": 3
+        }
+      ],
+      "sale": 90,
+      "total": 810
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 0,
+        "day": 14
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 900,
+          "num": 2
+        },
+        {
+          "name": "водолозки",
+          "price": 200,
+          "num": 2
+        },
+        {
+          "name": "майки",
+          "price": 700,
+          "num": 3
+        }
+      ],
+      "sale": 0,
+      "total": 4300
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 1,
+        "day": 15
+      },
+      "items": [
+        {
+          "name": "майки",
+          "price": 100,
+          "num": 2
+        }
+      ],
+      "sale": 0,
+      "total": 200
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 2,
+        "day": 16
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 100,
+          "num": 2
+        },
+        {
+          "name": "футболки",
+          "price": 300,
+          "num": 4
+        },
+        {
+          "name": "майки",
+          "price": 500,
+          "num": 1
+        },
+        {
+          "name": "штаны",
+          "price": 900,
+          "num": 2
+        },
+        {
+          "name": "бриджи",
+          "price": 500,
+          "num": 4
+        }
+      ],
+      "sale": 0,
+      "total": 5700
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 3,
+        "day": 17
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 4,
+        "day": 18
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 5,
+        "day": 19
+      },
+      "items": [
+        {
+          "name": "бриджи",
+          "price": 500,
+          "num": 1
+        },
+        {
+          "name": "водолозки",
+          "price": 200,
+          "num": 5
+        }
+      ],
+      "sale": 0,
+      "total": 1500
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 6,
+        "day": 20
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 400,
+          "num": 1
+        },
+        {
+          "name": "бриджи",
+          "price": 100,
+          "num": 1
+        },
+        {
+          "name": "майки",
+          "price": 200,
+          "num": 5
+        }
+      ],
+      "sale": 0,
+      "total": 1500
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 0,
+        "day": 21
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 700,
+          "num": 5
+        },
+        {
+          "name": "штаны",
+          "price": 900,
+          "num": 5
+        },
+        {
+          "name": "футболки",
+          "price": 800,
+          "num": 4
+        },
+        {
+          "name": "майки",
+          "price": 200,
+          "num": 2
+        },
+        {
+          "name": "бриджи",
+          "price": 900,
+          "num": 4
+        }
+      ],
+      "sale": 0,
+      "total": 15200
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 1,
+        "day": 22
+      },
+      "items": [
+        {
+          "name": "бриджи",
+          "price": 300,
+          "num": 5
+        },
+        {
+          "name": "футболки",
+          "price": 500,
+          "num": 3
+        },
+        {
+          "name": "водолозки",
+          "price": 700,
+          "num": 2
+        },
+        {
+          "name": "штаны",
+          "price": 700,
+          "num": 3
+        }
+      ],
+      "sale": 0,
+      "total": 6500
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 2,
+        "day": 23
+      },
+      "items": [
+        {
+          "name": "штаны",
+          "price": 600,
+          "num": 3
+        },
+        {
+          "name": "водолозки",
+          "price": 900,
+          "num": 5
+        }
+      ],
+      "sale": 630,
+      "total": 5670
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 3,
+        "day": 24
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 4,
+        "day": 25
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 5,
+        "day": 26
+      },
+      "items": [
+        {
+          "name": "футболки",
+          "price": 500,
+          "num": 5
+        }
+      ],
+      "sale": 250,
+      "total": 2250
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 6,
+        "day": 27
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 0,
+        "day": 28
+      },
+      "items": [
+        {
+          "name": "футболки",
+          "price": 300,
+          "num": 4
+        },
+        {
+          "name": "бриджи",
+          "price": 600,
+          "num": 1
+        },
+        {
+          "name": "водолозки",
+          "price": 300,
+          "num": 2
+        },
+        {
+          "name": "штаны",
+          "price": 400,
+          "num": 2
+        },
+        {
+          "name": "майки",
+          "price": 200,
+          "num": 5
+        }
+      ],
+      "sale": 0,
+      "total": 4200
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 1,
+        "day": 29
+      },
+      "items": [],
+      "sale": 0,
+      "total": 0
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 2,
+        "day": 30
+      },
+      "items": [
+        {
+          "name": "водолозки",
+          "price": 100,
+          "num": 3
+        },
+        {
+          "name": "майки",
+          "price": 700,
+          "num": 1
+        },
+        {
+          "name": "штаны",
+          "price": 800,
+          "num": 4
+        },
+        {
+          "name": "футболки",
+          "price": 500,
+          "num": 4
+        },
+        {
+          "name": "бриджи",
+          "price": 500,
+          "num": 2
+        }
+      ],
+      "sale": 0,
+      "total": 7200
+    },
+    {
+      "_date": {
+        "year": 2018,
+        "month": 0,
+        "weekday": 3,
+        "day": 31
+      },
+      "items": [
+        {
+          "name": "бриджи",
+          "price": 200,
+          "num": 4
+        },
+        {
+          "name": "футболки",
+          "price": 800,
+          "num": 2
+        },
+        {
+          "name": "штаны",
+          "price": 200,
+          "num": 1
+        },
+        {
+          "name": "водолозки",
+          "price": 500,
+          "num": 3
+        },
+        {
+          "name": "майки",
+          "price": 800,
+          "num": 1
+        }
+      ],
+      "sale": 490,
+      "total": 4410
+    }
+  ]

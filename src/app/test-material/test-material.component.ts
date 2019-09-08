@@ -14,8 +14,7 @@ export class TestMaterialComponent implements OnInit {
 
   constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
     let ico = iconRegistry.addSvgIcon( 'favorite',  sanitizer.bypassSecurityTrustResourceUrl('assets/baseline-favorite-24px.svg') );
-    console.log(ico);
-    
+    console.log(ico);  
    }
 
   ngOnInit() {

@@ -1,10 +1,34 @@
 <p>google-drive works!</p>
 
-<button (click)="signIn()" *ngIf="!isLoggedIn()"  mat-raised-button color="primary">Sign In</button>
-<button (click)="signOut()" *ngIf="isLoggedIn()" mat-raised-button color="primary">Sign Out</button>
-<button (click)="getUser()"  mat-raised-button color="primary">Get User</button>
-<br>
-<button (click)="getFileList()" *ngIf="isLoggedIn()" mat-raised-button color="primary">Get file list</button>
-<br>
-<!-- <button (click)="signIn()" [style.display]="isSigned? 'none':'block'" mat-raised-button color="primary">Sing In</button> -->
-<!-- <button (click)="signOut()" [style.display]="!isSigned? 'none':'block'" mat-raised-button color="primary">Sing Out</button> -->
+<button (click)="signIn()" *ngIf="!isLoggedIn() " mat-raised-button color="primary">Sign In</button>
+<button (click)="signOut()" *ngIf="isLoggedIn() " mat-raised-button color="primary">Sign Out</button>
+<button (click)="getList()" mat-raised-button color="primary">Get List</button>
+<button (click)="clearList()" mat-raised-button color="primary">Clear List</button>
+
+<div class="container">
+
+    <div class="list">
+        <mat-list (click)="getText(file)" *ngFor="let file of files; i as index" style="width: 100%;">
+            <mat-card>
+
+                <mat-list-item>name: {{file.name}}</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>id: {{file.id}}</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>name: {{file.mimeType}}</mat-list-item>
+            </mat-card>
+        </mat-list>
+    </div>
+
+
+    <div style="width: 100%;">
+        <mat-form-field color='accent' style="width: 100%;">
+            <input [formControl]="fcName"  autocomplete="off" matInput placeholder="Имя файла">
+        </mat-form-field>
+        <mat-form-field color='accent' style="width: 100%;">
+            <textarea [formControl]="fcTextarea" mat-autosize matInput placeholder="Textarea"></textarea>
+        </mat-form-field>
+        <button (click)="update()" mat-raised-button color="primary">Update</button>
+        <button (click)="createFile()" mat-raised-button color="primary">Create</button>
+    </div>
+</div>
