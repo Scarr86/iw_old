@@ -4,7 +4,7 @@ import { GoogleAuth2Service } from '../google-auth2.service';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
 import { GoogleDriveService } from '../google-drive.service';
-import { concatMap, delay, mergeMap, tap, concatMapTo, concat, takeWhile, mapTo, expand, take, filter } from 'rxjs/operators';
+import { concatMap, delay, mergeMap, tap, concatMapTo,  takeWhile, mapTo, expand, take, filter } from 'rxjs/operators';
 import { of, Observable, interval, range, fromEvent, Subscribable, Subscription } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
@@ -13,7 +13,6 @@ export class File {
   id: string;
   name: string;
   mimeType: string;
-  text: string;
 }
 
 @Component({
@@ -116,22 +115,21 @@ export class GoogleDriveComponent implements OnInit {
     this.drive.getTextFile(file.id, file.mimeType).subscribe(text => {
       this.fcTextarea.setValue(text);
       this.fcName.setValue(file.name);
-      this.cdr.detectChanges();
+      // this.cdr.detectChanges();
     });
   }
 
   getList() {
-    let sub:Subscription = this.drive.getList()
-    .subscribe(res => console.log("getList",res));
+    this.files = [];
 
-    console.log("sub", sub);
-    
-    // .subscribe(files => {
-    //   this.files = files;
-    //   this.cdr.detectChanges();
-    // },
-    //   (err: Error) => console.log(err.message)
-    // );
+    this.drive.getList("") .subscribe(res=>{
+      this.files = this.files.concat(res);
+      console.log("app", this.files);
+      this.cdr.detectChanges();
+    }, 
+    null, 
+    ()=>console.log("complite")
+    );
   }
 
   clearList() {

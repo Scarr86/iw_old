@@ -5,10 +5,10 @@
 /// <reference path="../../node_modules/@types/gapi.client.drive/index.d.ts" />
 import { Injectable } from '@angular/core';
 import { GoogleAuth2Service } from './google-auth2.service';
-import { Observable, of, from, empty, range } from 'rxjs';
+import { Observable, of, from, empty, range, interval } from 'rxjs';
 
 //import drive = gapi.client.drive.files;
-import { map, concatMap, tap, catchError, takeWhile, expand, filter } from 'rxjs/operators';
+import { map, concatMap, tap, catchError, takeWhile, expand, filter, delay, switchMap, concatMapTo, mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +34,10 @@ export class GoogleDriveService {
       );
   }
 
+
+
+
   getPage(nextPageToken: string): Observable<any> {
-    // console.log("getPage", nextPageToken);
 
     return from(gapi.client.drive.files.list({
       'pageSize': 1,
@@ -43,59 +45,63 @@ export class GoogleDriveService {
       // 'fields': "*",
       'pageToken': nextPageToken
     }))
-    .pipe(
-      tap(({result})=>console.log(result), ),
-      filter(res => !!res.result.nextPageToken),
-      concatMap(res => {
-        // console.log(res.result.files[0].name);
-        // console.log(res);
-        return this.getPage(res.result.nextPageToken);
-      }));
+    //   .pipe(
+    //     tap(({ result }) => console.log(result)),
+    //     filter(res => !!res.result.nextPageToken),
+    //     concatMap(res => {
+    //       return this.getPage(res.result.nextPageToken);
+    //     }));
   }
 
-  getList(): Observable<any> {
 
-    //     range(0, 5).pipe(
-    //       concatMap(res =>{
-    //       return this.getPage(nextPageToken).pipe(map(res=>{ 
-    //         console.log(res);
 
-    //         nextPageToken= res.result.nextPageToken }
-    //         ));
-    //     })
-    //     )
-    //     .subscribe();
-    // return of();
-    // let obs = this.getPage("nextPageToken")
-    //   .pipe(
-    //     // tap(res => console.log(res)),
-    //    concatMap(res=>{
-    //     console.log(res);
+  // Пример с промисом
+  async getPagePromise(nextPageToken: string) {
+    return gapi.client.drive.files.list({
+      'pageSize': 1,
+      'fields': "nextPageToken, files(id, name, mimeType )",
+      // 'fields': "*",
+      'pageToken': nextPageToken
+    })
+  }
+  async getListPromise(nextPageToken: string) {
 
-    //     return this.getPage(res.result.nextPageToken);
-    //    })
+    let res;
 
-    //     // concatMap(res=>{
-    //     //   console.log(res.result.nextPageToken);
+    let promise = this.getPagePromise(nextPageToken);
+    await promise;
+    promise.then((response) => {
+      res = response;
+      console.log(response);
+      if (response.result.nextPageToken)
+        this.getListPromise(response.result.nextPageToken);
+    })
+    return res;
+  }
 
-    //     //   return  this.getPage(res.result.nextPageToken);
-    //     // })
-    //     // takeWhile(res => {
-    //     //   console.log(res.result.nextPageToken);
+  getList(nextPageToken: string): Observable<[{ id: string, name: string, mimeType: string }]> {
 
-    //     //   return res.result.nextPageToken !== "";
-    //     // })
-    //   )
+    let obss = new Observable<[{ id: string, name: string, mimeType: string }]>(obs => {
+      this.getPage(nextPageToken)
+        .pipe(
+          tap((response) => {
+            obs.next(response.result.files);
+          }),
+          filter(response => !!response.result.nextPageToken),
+          concatMap(response => {
+            return this.getList(response.result.nextPageToken);
+          }))
+        .subscribe(
+          (response) => {
+            obs.next(response);
+          },
+          console.error,
+          () => {
+            obs.complete();
+          });
+    })
 
-    return this.getPage("")
-    // .subscribe(res => {
-      // console.log("Fin",res);
-
-    // })
-    // setTimeout(() => {
-    //   sub.unsubscribe();
-    // }, 5000);
-
+    return obss;
 
     // .pipe(
     //   tap(res => {
@@ -103,17 +109,13 @@ export class GoogleDriveService {
     //   }),
     //   map(res => {
     //     return res.result.files;
-    //     return res.result.files.map(file => {
-    //       return { id: file.id, name: file.name, mimeType: file.mimeType }
-    //     })
     //   }),
     //   catchError(res => {
     //     console.log("getList ERROR", res.result);
     //     return empty();
     //   })
     // );
-
-   // return of();
+    // return of();
   }
 
 
