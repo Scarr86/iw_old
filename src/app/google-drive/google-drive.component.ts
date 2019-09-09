@@ -4,8 +4,8 @@ import { GoogleAuth2Service } from '../google-auth2.service';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
 import { GoogleDriveService } from '../google-drive.service';
-import { concatMap, delay, mergeMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { concatMap, delay, mergeMap, tap, concatMapTo, concat, takeWhile, mapTo, expand, take, filter } from 'rxjs/operators';
+import { of, Observable, interval, range, fromEvent, Subscribable, Subscription } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
 
@@ -13,6 +13,7 @@ export class File {
   id: string;
   name: string;
   mimeType: string;
+  text: string;
 }
 
 @Component({
@@ -44,7 +45,7 @@ export class GoogleDriveComponent implements OnInit {
       console.log("init Client");
       this.cdr.detectChanges();
     },
-      () => console.log("ERROR INIT CLIENT"));
+      (err: Error) => console.log("ERROR INIT CLIENT", err.message));
   }
 
   signIn() {
@@ -56,6 +57,7 @@ export class GoogleDriveComponent implements OnInit {
     // this.ngGapiAuth2.signIn();
     // this.cdr.detectChanges();
   }
+
   signOut() {
     this.auth2.signOut().subscribe(() => {
       // this.cdr.detectChanges();
@@ -79,21 +81,35 @@ export class GoogleDriveComponent implements OnInit {
   fcTextarea: FormControl = new FormControl("");
   fcName: FormControl = new FormControl("");
 
+
+  delete() {
+    if (this.editFile)
+      this.drive.delete(this.editFile.id).subscribe(res => {
+        this.getList();
+        this.fcName.setValue("");
+        this.fcTextarea.setValue("");
+        this.editFile = null;
+      });
+    else console.log("Не выбран файл");
+
+  }
+
   update() {
     if (this.editFile)
       this.drive.udate(this.editFile.id, this.fcTextarea.value).subscribe();
+    // this.drive.udate("sdfdsfd", this.fcTextarea.value).subscribe(res=> console.log(res));
     else console.log("Не выбран файл");
-    
+
   }
 
   createFile() {
-    this.drive.createFile(this.fcName.value, this.fcTextarea.value).subscribe(res=>{
+    this.editFile = null;
+    this.drive.createFile(this.fcName.value, this.fcTextarea.value).subscribe(res => {
       this.editFile = res;
+      this.getList();
     });
 
   }
-
-
 
   getText(file: File) {
     this.editFile = file;
@@ -105,14 +121,24 @@ export class GoogleDriveComponent implements OnInit {
   }
 
   getList() {
-    this.drive.getList()
-      .subscribe(files => {
-        this.files = files;
-        this.cdr.detectChanges();
-      });
+    let sub:Subscription = this.drive.getList()
+    .subscribe(res => console.log("getList",res));
+
+    console.log("sub", sub);
+    
+    // .subscribe(files => {
+    //   this.files = files;
+    //   this.cdr.detectChanges();
+    // },
+    //   (err: Error) => console.log(err.message)
+    // );
   }
+
   clearList() {
     this.files = null;
+    this.fcName.setValue("");
+    this.fcTextarea.setValue("");
+    this.editFile = null;
 
 
     // this.example.subscribe(val =>
@@ -147,6 +173,30 @@ export class GoogleDriveComponent implements OnInit {
   // .subscribe(val => console.log(`With mergeMap: ${val}`));
 
 
+  getObs(n) {
+    console.log("getObs");
 
+    return of(n).pipe(delay(1000));
+  }
+
+
+  test() {
+
+    range(0, 5).pipe(
+      // filter(res => res > 2),
+      // mergeMap( res =>{
+      //   console.log("next rage",res);
+      //  return this.getObs(res).pipe(takeWhile(res => res > 2));
+      // }),
+      concatMap(res => {
+        console.log("next rage", res);
+        // return of(res);
+        return this.getObs(res)
+        .pipe(takeWhile(res => res > 2));
+      })
+    )
+      .subscribe(res => console.log(res));
+
+  }
 
 }
