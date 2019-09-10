@@ -1,13 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { GoogleAuth2Service } from '../google-auth2.service';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { GoogleAuth2Service } from '../google-auth2-service/google-auth2.service';
 // import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
-import { GoogleDriveService } from '../google-drive.service';
+import { GoogleDriveService } from '../google-drive-service/google-drive.service';
 import { concatMap, delay, mergeMap, tap, concatMapTo,  takeWhile, mapTo, expand, take, filter } from 'rxjs/operators';
 import { of, Observable, interval, range, fromEvent, Subscribable, Subscription } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 export class File {
   id: string;
@@ -22,6 +23,8 @@ export class File {
 })
 export class GoogleDriveComponent implements OnInit {
 
+  @ViewChild("btnUpdate",{static: false}) btnUpdate:MatButton;
+
   isSigned: boolean = false;
 
 
@@ -34,6 +37,8 @@ export class GoogleDriveComponent implements OnInit {
     private cdr: ChangeDetectorRef, // ChangeDetectorRef проверяет все переменные для компонента и его дитей и перересовывает страницу
     private drive: GoogleDriveService
   ) {
+    this.btnUpdate.disabled = true;
+
     console.log('GoogleDriveComponent');
 
   }
@@ -94,8 +99,10 @@ export class GoogleDriveComponent implements OnInit {
   }
 
   update() {
+
+
     if (this.editFile)
-      this.drive.udate(this.editFile.id, this.fcTextarea.value).subscribe();
+      this.drive.udate(this.editFile.id, this.fcTextarea.value, this.fcName.value).subscribe();
     // this.drive.udate("sdfdsfd", this.fcTextarea.value).subscribe(res=> console.log(res));
     else console.log("Не выбран файл");
 
@@ -115,7 +122,7 @@ export class GoogleDriveComponent implements OnInit {
     this.drive.getTextFile(file.id, file.mimeType).subscribe(text => {
       this.fcTextarea.setValue(text);
       this.fcName.setValue(file.name);
-      // this.cdr.detectChanges();
+      this.cdr.detectChanges();
     });
   }
 
@@ -126,10 +133,7 @@ export class GoogleDriveComponent implements OnInit {
       this.files = this.files.concat(res);
       console.log("app", this.files);
       this.cdr.detectChanges();
-    }, 
-    null, 
-    ()=>console.log("complite")
-    );
+    });
   }
 
   clearList() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Data, Item } from '../data';
-import { DataService } from '../data.service';
+import { Data, Item } from '../data-service/data';
+import { DataService } from '../data-service/data.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';

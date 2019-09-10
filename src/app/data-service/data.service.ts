@@ -19,6 +19,4 @@ export class DataService {
   get data(){
     return this._data;
   }
-
-
 }

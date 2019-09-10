@@ -1,6 +1,6 @@
-/// <reference path="../../node_modules/@types/gapi/index.d.ts" />
-/// <reference path="../../node_modules/@types/gapi.auth2/index.d.ts" />
-/// <reference path="../../node_modules/@types/gapi.client/index.d.ts" />
+/// <reference path="../../../node_modules/@types/gapi/index.d.ts" />
+/// <reference path="../../../node_modules/@types/gapi.auth2/index.d.ts" />
+/// <reference path="../../../node_modules/@types/gapi.client/index.d.ts" />
 import { Injectable } from '@angular/core';
 import { Observable, from, of, observable, forkJoin } from 'rxjs';
 import { map, catchError, delay, tap, mergeMap } from 'rxjs/operators';

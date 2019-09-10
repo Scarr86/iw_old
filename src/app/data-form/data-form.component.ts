@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { DataService } from '../data.service';
+import { DataService } from '../data-service/data.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Data, Item } from '../data';
+import { Data, Item } from '../data-service/data';
 
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NgGapiAuth2Service } from './ng-gapi-auth2.service';
+import { NgGapiAuth2Service } from '../google-auth2-service/ng-gapi-auth2.service';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { GoogleApiService } from 'ng-gapi';

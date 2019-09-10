@@ -28,7 +28,7 @@
         <mat-form-field color='accent' style="width: 100%;">
             <textarea [formControl]="fcTextarea" mat-autosize matInput placeholder="Textarea"></textarea>
         </mat-form-field>
-        <button (click)="update()" mat-raised-button color="primary">Update</button>
+        <button #btnUpdate (click)="update()" mat-raised-button color="primary">Update</button>
         <button (click)="createFile()" mat-raised-button color="primary">Create</button>
         <button (click)="delete()" mat-raised-button color="primary">Delete</button>
         <button (click)="test()" mat-raised-button color="primary">Test</button>

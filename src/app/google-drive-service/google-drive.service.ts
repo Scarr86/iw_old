@@ -1,10 +1,10 @@
 
-/// <reference path="../../node_modules/@types/gapi/index.d.ts" />
-/// <reference path="../../node_modules/@types/gapi.client/index.d.ts" />
+/// <reference path="../../../node_modules/@types/gapi/index.d.ts" />
+/// <reference path="../../../node_modules/@types/gapi.client/index.d.ts" />
 
-/// <reference path="../../node_modules/@types/gapi.client.drive/index.d.ts" />
+/// <reference path="../../../node_modules/@types/gapi.client.drive/index.d.ts" />
 import { Injectable } from '@angular/core';
-import { GoogleAuth2Service } from './google-auth2.service';
+import { GoogleAuth2Service } from '../google-auth2-service/google-auth2.service';
 import { Observable, of, from, empty, range, interval } from 'rxjs';
 
 //import drive = gapi.client.drive.files;
@@ -26,12 +26,7 @@ export class GoogleDriveService {
       gapi.client.drive.files.delete({
         fileId: id
       })).pipe(
-        tap(res => console.log("delete OK", res.result)),
-        catchError(res => {
-          console.log("delete ERROR", res.result);
-          return empty();
-        })
-      );
+        tap(console.log, console.error, ()=>console.log("delete complite")) );
   }
 
 
@@ -99,7 +94,9 @@ export class GoogleDriveService {
           () => {
             obs.complete();
           });
-    })
+    }).pipe(
+      tap(console.log, console.error, ()=>console.log("getList complite")) 
+      );
 
     return obss;
 
@@ -130,15 +127,10 @@ export class GoogleDriveService {
           fields: "body"
         })
       ).pipe(
-        tap(res => console.log("getTextFile OK", res.result)),
+        tap(console.log, console.error, ()=>console.log("getTextFile complite")),
         map(res => {
           return res.body;
-        }),
-        catchError(res => {
-          console.log("getTextFile ERROR", res.result);
-          return empty();
-        })
-      );
+        }));
     }
     if (mimeType === "application/vnd.google-apps.document") {
       return from(
@@ -148,30 +140,28 @@ export class GoogleDriveService {
           fields: 'body'
         })
       ).pipe(
-        tap(res => console.log(res)),
+        tap(console.log, 
+          console.error, 
+          () => console.log("getTextFile complite")
+        ),
         map(res => {
           return res.body;
-        }),
-        catchError(res => {
-          console.log("getTextFile ERROR", res.result);
-          return empty();
-        })
-      );
+        }));
     }
     return of("");
   }
 
-  udate(id: string, data): Observable<any> {
+  udate(id: string, data:string, name?:string): Observable<any> {
 
     const boundary = '-------314159265358979323846';
     const delimiter = "\r\n--" + boundary + "\r\n";
     const close_delim = "\r\n--" + boundary + "--";
 
     const contentType = 'application/json';
-
-
+    
+    if(! name) name = "default name"
     var metadata = {
-      // 'name': "default name" + ".txt",
+      'name': "default name",
       'mimeType': contentType,
     };
 
@@ -194,12 +184,10 @@ export class GoogleDriveService {
       },
       body: multipartRequestBody
     })).pipe(
-      tap(res => console.log("udate OK", res)),
-      catchError(res => {
-        console.log("udate ERROR", res.result);
-        return empty();
-      })
-    );
+      tap(console.log, 
+        console.error, 
+        () => console.log("udate complite")
+      ));
 
   }
 
