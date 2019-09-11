@@ -1,14 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { GoogleDriveService } from '../google-drive-service/google-drive.service';
 import { GoogleAuth2Service } from '../google-auth2-service/google-auth2.service';
 // import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
-import { GoogleDriveService } from '../google-drive-service/google-drive.service';
-import { concatMap, delay, mergeMap, tap, concatMapTo,  takeWhile, mapTo, expand, take, filter } from 'rxjs/operators';
-import { of, Observable, interval, range, fromEvent, Subscribable, Subscription } from 'rxjs';
+import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, of, interval, range, fromEvent, Subscribable, Subscription, observable, concat, merge, from } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { resolve } from 'url';
 
 export class File {
   id: string;
@@ -23,7 +24,7 @@ export class File {
 })
 export class GoogleDriveComponent implements OnInit {
 
-  @ViewChild("btnUpdate",{static: false}) btnUpdate:MatButton;
+  @ViewChild("btnUpdate", { static: false }) btnUpdate: MatButton;
 
   isSigned: boolean = false;
 
@@ -33,23 +34,24 @@ export class GoogleDriveComponent implements OnInit {
 
 
   constructor(
+    private drive: GoogleDriveService,
     private auth2: GoogleAuth2Service, // my realizacia
     private cdr: ChangeDetectorRef, // ChangeDetectorRef проверяет все переменные для компонента и его дитей и перересовывает страницу
-    private drive: GoogleDriveService
   ) {
-    this.btnUpdate.disabled = true;
+
 
     console.log('GoogleDriveComponent');
 
   }
 
   ngOnInit() {
-    this.auth2.initClient().subscribe(() => {
 
-      console.log("init Client");
-      this.cdr.detectChanges();
-    },
-      (err: Error) => console.log("ERROR INIT CLIENT", err.message));
+    // this.auth2.initClient().subscribe(() => {
+
+    //   console.log("init Client");
+    //   this.cdr.detectChanges();
+    // },
+    //   (err: Error) => console.log("ERROR INIT CLIENT", err.message));
   }
 
   signIn() {
@@ -63,12 +65,15 @@ export class GoogleDriveComponent implements OnInit {
   }
 
   signOut() {
-    this.auth2.signOut().subscribe(() => {
-      // this.cdr.detectChanges();
-      console.log("signOut");
-
-    },
-      () => console.log("ERROR SIGNOUT"));
+    this.auth2.signOut().pipe(
+      tap(console.log)
+    )
+      .subscribe(
+        () => {
+          this.cdr.detectChanges();
+          console.log("signOut");
+        },
+        () => console.log("ERROR SIGNOUT"));
     // this.ngGapiAuth2.signOut();
   }
 
@@ -80,7 +85,8 @@ export class GoogleDriveComponent implements OnInit {
 
   /******************************************************* */
   // @ViewChild('ta', { static: false }) ta: MatTextareaAutosize;
-
+  @ViewChild("myInput", { static: false }) myInput: ElementRef;
+  @ViewChild("myTa", { static: false }) myTa: ElementRef;
 
   fcTextarea: FormControl = new FormControl("");
   fcName: FormControl = new FormControl("");
@@ -100,9 +106,18 @@ export class GoogleDriveComponent implements OnInit {
 
   update() {
 
+    this.btnUpdate.disabled = true;
+    // this.btnUpdate.disabled = false;
+
 
     if (this.editFile)
-      this.drive.udate(this.editFile.id, this.fcTextarea.value, this.fcName.value).subscribe();
+      this.drive.udate(this.editFile.id, this.fcTextarea.value, this.fcName.value)
+        .subscribe(
+          () => {
+            this.btnUpdate.disabled = false;
+            this.cdr.detectChanges();
+          }
+        );
     // this.drive.udate("sdfdsfd", this.fcTextarea.value).subscribe(res=> console.log(res));
     else console.log("Не выбран файл");
 
@@ -129,9 +144,9 @@ export class GoogleDriveComponent implements OnInit {
   getList() {
     this.files = [];
 
-    this.drive.getList("") .subscribe(res=>{
+    this.drive.getList().subscribe(res => {
       this.files = this.files.concat(res);
-      console.log("app", this.files);
+      // console.log("app", this.files);
       this.cdr.detectChanges();
     });
   }
@@ -151,53 +166,127 @@ export class GoogleDriveComponent implements OnInit {
 
   }
 
-  // RxJS v6+
-
-  //emit delay value
-  source = of(2000, 1000);
-  // map value from source into inner observable, when complete emit result and move to next
-  example = this.source.pipe(
-    tap(val => console.log(val)),
-    concatMap(val => of(`Delayed by: ${val}ms`).pipe(delay(val)))
-  );
-  //output: With concatMap: Delayed by: 2000ms, With concatMap: Delayed by: 1000ms
-  //  subscribe = this.example.subscribe(val =>
-  //   console.log(`With concatMap: ${val}`)
-  // );
-
-  // showing the difference between concatMap and mergeMap
-  mergeMapExample = this.source
-    .pipe(
-      // just so we can log this after the first example has run
-      // delay(5000),
-      mergeMap(val => of(`Delayed by: ${val}ms`).pipe(delay(val)))
-    )
-  // .subscribe(val => console.log(`With mergeMap: ${val}`));
-
-
-  getObs(n) {
-    console.log("getObs");
-
-    return of(n).pipe(delay(1000));
+  getPromise(str: string, t: number) {
+    return from(new Promise((resolve) => {
+      console.log("start promise1");
+      setTimeout(() => resolve(str), t);
+    }))
   }
+
 
 
   test() {
 
-    range(0, 5).pipe(
-      // filter(res => res > 2),
-      // mergeMap( res =>{
-      //   console.log("next rage",res);
-      //  return this.getObs(res).pipe(takeWhile(res => res > 2));
-      // }),
-      concatMap(res => {
-        console.log("next rage", res);
-        // return of(res);
-        return this.getObs(res)
-        .pipe(takeWhile(res => res > 2));
-      })
-    )
-      .subscribe(res => console.log(res));
+    fromEvent(this.myInput.nativeElement, "input")
+
+      .pipe(
+        map((ev: any) => ev.data),
+        debounceTime(500),
+        tap(console.log),
+        distinctUntilChanged(),
+        switchMap(() => from(this.getPromise("hello", 1000)))
+      )
+      .subscribe(
+        (ev: any) => {
+
+          this.myTa.nativeElement.value = this.myInput.nativeElement.value;
+        }
+      );
+
+
+    // let st1$ = new Observable(obs => {
+    //   this.getPromise("Hello", 1000).then((s) => {
+    //     obs.next(s)
+    //     obs.complete();
+    //   });
+    //   // console.log("start st1$");
+    //   // setTimeout(() => {
+    //   //   obs.next("Hello")
+    //   //   obs.complete();
+    //   // }, 1000);
+    // });
+    // let st2$ = new Observable(obs => {
+    //   this.getPromise("All", 1000).then((s) => {
+    //     obs.error(new Error("error"));
+    //     // obs.next(s)
+    //     // obs.complete();
+    //   });
+    //   // console.log("start st2$");
+    //   // setTimeout(() => {
+    //   //   obs.next("All")
+    //   //   obs.complete();
+    //   // }, 500);
+    // })
+    // let st3$ = new Observable(obs => {
+    //   this.getPromise("World", 1000).then((s) => {
+    //     obs.next(s)
+    //     obs.complete();
+    //   });
+      // console.log("start st3$");
+      // setTimeout(() => {
+      //   obs.next("World")
+      //   obs.complete();
+      // }, 300);
+    // })
+
+
+    // st1$.pipe(
+    //   switchMap(() => st2$),
+    //   switchMap(() => st3$)
+    // )
+    // .subscribe(console.log, null, () => console.log("complite"));
+
+    // let res$ = concat(st1$, st2$, st3$);
+    // let res$ = concat(st1$, st2$, st3$);
+    let res$ = concat(this.getPromise("Hello", 1000), this.getPromise("All", 1000), this.getPromise("World", 1000));
+    res$.subscribe(console.log, console.error, () => console.log("complite"));
+    
+    // this.getPromise("Hello", 1000)
+    // .then(s=>{
+    //   console.log(s);
+    //   return this.getPromise("All", 1000);
+    // })
+    // .then(s=>{
+    //   console.log(s);
+    //   return this.getPromise("world",1000);
+    // })
+    // .then(s=>console.log(s));
+
+
+
+
+    // let stream$ = Observable.create(async (obs) => {
+    //   let cc;
+    //   do {
+    //     await new Promise<number>((resolve) => {
+    //       setTimeout(() => resolve(this.cnt++), 1000);
+    //     }).then(c => {
+    //       cc = c;
+    //     });
+    //     console.log(cc);
+    //     obs.next(cc);
+    //   } while (cc < 5);
+    //   obs.complete();
+
+
+    // });
+
+    // stream$.subscribe(console.log, null, ()=>console.log("complite") );
+
+    // range(0, 5).pipe(
+    //   // filter(res => res > 2),
+    //   // mergeMap( res =>{
+    //   //   console.log("next rage",res);
+    //   //  return this.getObs(res).pipe(takeWhile(res => res > 2));
+    //   // }),
+    //   concatMap(res => {
+    //     console.log("next rage", res);
+    //     // return of(res);
+    //     return this.getObs(res)
+    //     .pipe(takeWhile(res => res > 2));
+    //   })
+    // )
+    //   .subscribe(res => console.log(res));
 
   }
 

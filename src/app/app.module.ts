@@ -23,6 +23,8 @@ import {
 } from "ng-gapi";
 import { DataFormComponent } from './data-form/data-form.component';
 import { HistoryComponent } from './history/history.component';
+import { GoogleDriveService } from './google-drive-service/google-drive.service';
+import { GoogleAuth2Service } from './google-auth2-service/google-auth2.service';
 
 
 // let gapiClientConfig: NgGapiClientConfig = {
@@ -58,7 +60,7 @@ import { HistoryComponent } from './history/history.component';
     //   useValue: gapiClientConfig
     // })
   ],
-  providers: [],
+  providers: [ GoogleDriveService, GoogleAuth2Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

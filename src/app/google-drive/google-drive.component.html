@@ -23,7 +23,7 @@
 
     <div style="width: 100%;">
         <mat-form-field color='accent' style="width: 100%;">
-            <input [formControl]="fcName"  autocomplete="off" matInput placeholder="Имя файла">
+            <input [formControl]="fcName"   autocomplete="off" matInput placeholder="Имя файла">
         </mat-form-field>
         <mat-form-field color='accent' style="width: 100%;">
             <textarea [formControl]="fcTextarea" mat-autosize matInput placeholder="Textarea"></textarea>
@@ -32,5 +32,10 @@
         <button (click)="createFile()" mat-raised-button color="primary">Create</button>
         <button (click)="delete()" mat-raised-button color="primary">Delete</button>
         <button (click)="test()" mat-raised-button color="primary">Test</button>
+    </div>
+    <div style="width: 100%;">
+        <input #myInput autocomplete="off" placeholder="Имя файла">
+        <textarea #myTa style="width: 100%" cols="10" placeholder="Textarea"></textarea>
+
     </div>
 </div>

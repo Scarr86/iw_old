@@ -5,28 +5,33 @@
 /// <reference path="../../../node_modules/@types/gapi.client.drive/index.d.ts" />
 import { Injectable } from '@angular/core';
 import { GoogleAuth2Service } from '../google-auth2-service/google-auth2.service';
-import { Observable, of, from, empty, range, interval } from 'rxjs';
+import { Observable, of, from, empty, range, interval, Subscribable, Subscriber } from 'rxjs';
 
-//import drive = gapi.client.drive.files;
+import Drive = gapi.client.drive.FilesResource;
 import { map, concatMap, tap, catchError, takeWhile, expand, filter, delay, switchMap, concatMapTo, mergeMap } from 'rxjs/operators';
+import { async } from 'q';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class GoogleDriveService {
+  drive: Drive;
 
   constructor(private auth2: GoogleAuth2Service) {
-    console.log("token", auth2.token);
+    console.log("Drive service");
 
   }
 
-  delete(id: string) {
 
+
+  delete(id: string) {
     return from(
       gapi.client.drive.files.delete({
         fileId: id
       })).pipe(
-        tap(console.log, console.error, ()=>console.log("delete complite")) );
+        tap(
+          null,
+          (err) => console.error("DELETE FAIL", id, err),
+          () => console.log(`delete     complite ${id} `))
+      );
   }
 
 
@@ -74,7 +79,34 @@ export class GoogleDriveService {
     return res;
   }
 
-  getList(nextPageToken: string): Observable<[{ id: string, name: string, mimeType: string }]> {
+  getList(size?: number): Observable<any> {
+    let nextPageToken = "";
+    let exit = 1;
+
+    let request = {
+      'pageSize': size ? size : 1,
+      'fields': "nextPageToken, files(id, name, mimeType )",
+      // 'fields': "*",
+      'pageToken': nextPageToken ? nextPageToken : ""
+    }
+
+    return Observable.create(async (obs: Subscriber<any>) => {
+      do {
+        await gapi.client.drive.files.list(request)
+          .then((res) => {
+            console.log("next page");
+            nextPageToken = res.result.nextPageToken;
+            obs.next(res.result.files);
+            obs.complete();
+          });
+      } while (nextPageToken && exit );
+      return ()=>{ exit = 0; } 
+    }).pipe(
+      tap(null, (err) => console.error("list      FAIL", err), () => console.log(`list     complite ${size ? size : 100}`))
+    )
+
+
+
 
     let obss = new Observable<[{ id: string, name: string, mimeType: string }]>(obs => {
       this.getPage(nextPageToken)
@@ -95,24 +127,11 @@ export class GoogleDriveService {
             obs.complete();
           });
     }).pipe(
-      tap(console.log, console.error, ()=>console.log("getList complite")) 
-      );
+      tap(console.log, console.error, () => console.log("getList complite"))
+    );
 
     return obss;
 
-    // .pipe(
-    //   tap(res => {
-    //     console.log("getList OK", res.result);
-    //   }),
-    //   map(res => {
-    //     return res.result.files;
-    //   }),
-    //   catchError(res => {
-    //     console.log("getList ERROR", res.result);
-    //     return empty();
-    //   })
-    // );
-    // return of();
   }
 
 
@@ -120,17 +139,20 @@ export class GoogleDriveService {
     // application/json
     // application/vnd.google-apps.document
     if (mimeType === "application/json" || mimeType === 'text/plain') {
-      return from(
+      return new Observable(obs => {
         gapi.client.drive.files.get({
           fileId: id,
           alt: 'media',
           fields: "body"
+        }).then(res => {
+          obs.next(res.body);
+          obs.complete();
         })
-      ).pipe(
-        tap(console.log, console.error, ()=>console.log("getTextFile complite")),
-        map(res => {
-          return res.body;
-        }));
+      })
+        .pipe(
+          tap(null, (err) => console.error("text      FAIL", err), () => console.log(`text     complite ${id}`))
+        )
+
     }
     if (mimeType === "application/vnd.google-apps.document") {
       return from(
@@ -140,8 +162,8 @@ export class GoogleDriveService {
           fields: 'body'
         })
       ).pipe(
-        tap(console.log, 
-          console.error, 
+        tap(console.log,
+          console.error,
           () => console.log("getTextFile complite")
         ),
         map(res => {
@@ -151,15 +173,15 @@ export class GoogleDriveService {
     return of("");
   }
 
-  udate(id: string, data:string, name?:string): Observable<any> {
+  udate(id: string, data: string, name?: string): Observable<any> {
 
     const boundary = '-------314159265358979323846';
     const delimiter = "\r\n--" + boundary + "\r\n";
     const close_delim = "\r\n--" + boundary + "--";
 
     const contentType = 'application/json';
-    
-    if(! name) name = "default name"
+
+    if (!name) name = "default name"
     var metadata = {
       'name': "default name",
       'mimeType': contentType,
@@ -175,18 +197,23 @@ export class GoogleDriveService {
       // JSON.stringify(data, null, 2) +
       close_delim;
 
-    return from(gapi.client.request({
-      path: '/upload/drive/v3/files/' + id,
-      method: 'PATCH',
-      params: { 'uploadType': 'multipart', 'alt': 'json' },
-      headers: {
-        'Content-Type': 'multipart/related; boundary="' + boundary + '"'
-      },
-      body: multipartRequestBody
-    })).pipe(
-      tap(console.log, 
-        console.error, 
-        () => console.log("udate complite")
+    return new Observable(obs => {
+      gapi.client.request({
+        path: '/upload/drive/v3/files/' + id,
+        method: 'PATCH',
+        params: { 'uploadType': 'multipart', 'alt': 'json' },
+        headers: {
+          'Content-Type': 'multipart/related; boundary="' + boundary + '"'
+        },
+        body: multipartRequestBody
+      }).then(() => {
+        obs.next();
+        obs.complete();
+      });
+    }).pipe(
+      tap(null,
+        (err) => console.error("udate     FAIL", err),
+        () => console.log(`udate      complite ${id}`)
       ));
 
   }
@@ -217,26 +244,26 @@ export class GoogleDriveService {
 
 
 
-    return from(gapi.client.request({
-      path: '/upload/drive/v3/files',
-      method: 'POST',
-      params: { 'uploadType': 'multipart' },
-      headers: {
-        'Content-Type': 'multipart/related; boundary="' + boundary + '"'
-      },
-      body: multipartRequestBody
-    })).pipe(
-      tap(res => {
-        console.log("createFile OK", res)
-      }),
-      map(res => {
-        return { id: res.result['id'], name: res.result['name'], mimeType: res.result['mimeType'] };
-      }),
-      catchError(res => {
-        console.log("createFile ERROR", res.result);
-        return empty();
+    return new Observable(obs => {
+
+      gapi.client.request({
+        path: '/upload/drive/v3/files',
+        method: 'POST',
+        params: { 'uploadType': 'multipart' },
+        headers: {
+          'Content-Type': 'multipart/related; boundary="' + boundary + '"'
+        },
+        body: multipartRequestBody
+      }).then((res) => {
+        obs.next({ id: res.result['id'], name: res.result['name'], mimeType: res.result['mimeType'] });
+        obs.complete();
       })
-    );
+    }).pipe(
+      tap(
+        (res) => console.log(`create  ${res.id}`),
+        (err) => console.error("create     FAIL", err),
+        null
+      ));
   }
 }
 
