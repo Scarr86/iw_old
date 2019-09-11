@@ -37,9 +37,9 @@ export class GoogleDriveService {
 
 
 
-  getPage(nextPageToken: string): Observable<any> {
+  getPage(nextPageToken: string): Observable < gapi.client.Response <gapi.client.drive.FileList> >{
 
-    return from(gapi.client.drive.files.list({
+    return from( gapi.client.drive.files.list({
       'pageSize': 1,
       'fields': "nextPageToken, files(id, name, mimeType )",
       // 'fields': "*",

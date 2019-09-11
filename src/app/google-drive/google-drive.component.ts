@@ -4,8 +4,8 @@ import { GoogleAuth2Service } from '../google-auth2-service/google-auth2.service
 // import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
-import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Observable, of, interval, range, fromEvent, Subscribable, Subscription, observable, concat, merge, from } from 'rxjs';
+import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged, delayWhen } from 'rxjs/operators';
+import { Observable, of, interval, range, fromEvent, Subscribable, Subscription, observable, concat, merge, from, Subject } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -144,6 +144,18 @@ export class GoogleDriveComponent implements OnInit {
   getList() {
     this.files = [];
 
+    this.drive.getPage("")
+    .pipe(
+      expand(res=>{
+        return this.drive.getPage(res.result.nextPageToken)
+      }),
+      takeWhile((res, i)=>{
+        console.log(i, res.result.files);
+        return !!res.result.nextPageToken;
+      })
+    ).subscribe( );
+    return;
+
     this.drive.getList().subscribe(res => {
       this.files = this.files.concat(res);
       // console.log("app", this.files);
@@ -173,25 +185,87 @@ export class GoogleDriveComponent implements OnInit {
     }))
   }
 
+  arr: Array<string> = new Array();
+  sub: Subject<string> = new Subject();
 
+  addArr(n) {
+    this.arr.push(n);
+    this.sub.next(n);
+    // this.sub.complete();
+  }
+  simul(r) {
+    let rand = r;
+    return of(rand).pipe(delay(rand));
+  }
+ 
+  isSub: boolean = true;
 
   test() {
+    // this.addArr(2);
+    this.arr.length = 0;
+    // console.log(this.arr);
+    if (this.isSub) {
+      this.isSub = false;
+     
+      this.sub
+        .pipe(
+          concatMap(l=>{
+            let rand = Math.floor(Math.random()*3000);
+            console.log("need ",l,  rand);
+            return of(l).pipe(delay(rand));
+          })
+        )
+        .subscribe(
+          (l) => {
+            console.log("end save" , l);
+            // this.arr.push(n);
+            console.log(this.arr);
+            
+            // console.log(n);
+            // console.log(this.arr);
+          }, null,
+          () => console.log("complite"));
+    }
 
-    fromEvent(this.myInput.nativeElement, "input")
 
-      .pipe(
-        map((ev: any) => ev.data),
-        debounceTime(500),
-        tap(console.log),
-        distinctUntilChanged(),
-        switchMap(() => from(this.getPromise("hello", 1000)))
-      )
-      .subscribe(
-        (ev: any) => {
+    from("abc").pipe(
+      delayWhen((r,i) => 
+      {
+        // console.log(r, i);
+       return interval(Math.random() * 1000).pipe(tap(()=>console.log(r, i)))
+      })
+    ).subscribe(
+      (r) => {
+        console.log("start save", r);
+        
+        this.addArr(r)
+        // console.log(r);
+      },
+      null,
+      () => { }
+    )
+    // this.simulAdd().subscribe((r)=>this.addArr(r));
 
-          this.myTa.nativeElement.value = this.myInput.nativeElement.value;
-        }
-      );
+
+
+
+    // this.addArr(1);
+    // console.log(this.arr);
+    // fromEvent(this.myInput.nativeElement, "input")
+
+    //   .pipe(
+    //     map((ev: any) => ev.data),
+    //     debounceTime(500),
+    //     tap(console.log),
+    //     distinctUntilChanged(),
+    //     switchMap(() => from(this.getPromise("hello", 1000)))
+    //   )
+    //   .subscribe(
+    //     (ev: any) => {
+
+    //       this.myTa.nativeElement.value = this.myInput.nativeElement.value;
+    //     }
+    //   );
 
 
     // let st1$ = new Observable(obs => {
@@ -222,11 +296,11 @@ export class GoogleDriveComponent implements OnInit {
     //     obs.next(s)
     //     obs.complete();
     //   });
-      // console.log("start st3$");
-      // setTimeout(() => {
-      //   obs.next("World")
-      //   obs.complete();
-      // }, 300);
+    // console.log("start st3$");
+    // setTimeout(() => {
+    //   obs.next("World")
+    //   obs.complete();
+    // }, 300);
     // })
 
 
@@ -238,9 +312,9 @@ export class GoogleDriveComponent implements OnInit {
 
     // let res$ = concat(st1$, st2$, st3$);
     // let res$ = concat(st1$, st2$, st3$);
-    let res$ = concat(this.getPromise("Hello", 1000), this.getPromise("All", 1000), this.getPromise("World", 1000));
-    res$.subscribe(console.log, console.error, () => console.log("complite"));
-    
+    //let res$ = concat(this.getPromise("Hello", 1000), this.getPromise("All", 1000), this.getPromise("World", 1000));
+    //res$.subscribe(console.log, console.error, () => console.log("complite"));
+
     // this.getPromise("Hello", 1000)
     // .then(s=>{
     //   console.log(s);
