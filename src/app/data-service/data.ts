@@ -14,7 +14,6 @@ export interface Idata {
     sale: number;
     total: number;
     other?: any;
-
 }
 
 export interface Idate {
@@ -33,25 +32,25 @@ export class Item implements Iitem {
 }
 
 export class Data implements Idata {
-    private _date: Idate = {
+     _date: Idate = {
         year: 0,
         month: 0,
         weekday: 0,
         day: 0
     };
-    //date: Date;
+    ddate: Date;
     items: Item[] = [];
     sale: number = 0;
     total: number = 0;
 
 
     constructor() {
-        //this.items.push(new Item());
+        this.items.push(new Item());
     }
-    get date(): Date | number {
+    get date(): Date  {
         return new Date(this._date.year, this._date.month, this._date.day);
     }
-    set date(date: Date | number) {
+    set date(date: Date) {
         let d: Date = new Date(date);
 
         this._date.year = d.getFullYear();

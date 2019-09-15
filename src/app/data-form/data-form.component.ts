@@ -20,21 +20,26 @@ export class DataFormComponent implements OnInit {
   item: Item;
 
   options: string[] = ['One', 'Two', 'Three'];
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef, private dataServise: DataService) {
-    let ico = iconRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_delete_24px.svg'));
+  constructor(
+    private iconRegistry: MatIconRegistry, 
+    private sanitizer: DomSanitizer, 
+    private cdr: ChangeDetectorRef, 
+    private dataServise: DataService) {
+    // let deleteIco = iconRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_delete_24px.svg'));
   }
 
   ngOnInit() {
     this.data = this.dataServise.data;
-    this.data.date =  Date.now();
+    this.data.date = new Date (Date.now());
+    this.data.ddate = new Date();
 
     this.formGroup = new FormGroup({
 
       "arrayFormGroups": new FormArray([
         new FormGroup({
-          "itemName": new FormControl(''),
-          "price": new FormControl('0'),
-          "num": new FormControl('0')
+          "itemName": new FormControl(this.data.items[0].name),
+          "price": new FormControl(this.data.items[0].price),
+          "num": new FormControl(this.data.items[0].num)
         })
       ]),
       "sale": new FormControl(this.data.sale),
@@ -49,7 +54,9 @@ export class DataFormComponent implements OnInit {
       //console.log(stat, this.formGroup.controls["total"].value );
     });
 
-    this.formGroup.get('arrayFormGroups').valueChanges.subscribe((items: any[]) => {
+    this.formGroup.get('arrayFormGroups').valueChanges
+    
+    .subscribe((items: any[]) => {
       this.data.items = items
         .filter((val): Item | boolean => {
           if (val.num * val.price)
@@ -72,6 +79,8 @@ export class DataFormComponent implements OnInit {
 
 
   save() {
+    this.dataServise.save();
+
   }
 
   addItems() {
@@ -88,7 +97,7 @@ export class DataFormComponent implements OnInit {
     return this.formGroup.get('arrayFormGroups') as FormArray;
   }
 
-  getData() {
+  dataJSON() {
    console.log(
      this.data.printfData()
    );
@@ -96,6 +105,12 @@ export class DataFormComponent implements OnInit {
 
   deleteItem(i: number) {
     this.arrayFormGroups.removeAt(i);
+  }
+
+  getData(){
+    // console.log("getData");
+    
+    this.dataServise.getData();
   }
 
 

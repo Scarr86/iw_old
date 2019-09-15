@@ -8,7 +8,7 @@
 <div class="container">
 
     <div class="list">
-        <mat-list *ngFor="let file of files; i as index" style="width: 100%;">
+        <mat-list *ngFor="let file of files ;let i = index" style="width: 100%;">
             <mat-card>
 
                 <mat-list-item>name: {{file.name}}</mat-list-item>
@@ -18,7 +18,7 @@
                 <mat-list-item>name: {{file.mimeType}}</mat-list-item>
                 <button (click)="getText(file)"  mat-raised-button
                     color="primary">Text</button>
-                <button (click)="delete(file)" style=" position: absolute; right: 10px;" mat-raised-button color="primary">Delete</button>
+                <button (click)="delete(i)" style=" position: absolute; right: 10px;" mat-raised-button color="primary">Delete</button>
             </mat-card>
         </mat-list>
     </div>
@@ -34,9 +34,9 @@
         <button #btnUpdate (click)="update()" mat-raised-button color="primary">Update</button>
         <button (click)="createFile()" mat-raised-button color="primary">Create</button>
     </div>
-    <div style="width: 30%;">
+    <!-- <div style="width: 30%;">
         <input #myInput autocomplete="off" placeholder="Имя файла">
         <textarea #myTa style="width: 100%" cols="10" placeholder="Textarea"></textarea>
 
-    </div>
+    </div> -->
 </div>

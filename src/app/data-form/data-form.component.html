@@ -7,6 +7,7 @@
     </p>
 
 
+
     <form [formGroup]='formGroup' (ngSubmit)='save()'>
 
         <div formArrayName="arrayFormGroups">
@@ -36,7 +37,9 @@
 
                 <div style="width: 100%;"></div>
                 <div (click)="deleteItem(i)" class="with-icon">
-                    <mat-icon inline='false' color="primary" svgIcon="delete"> </mat-icon>
+                        <mat-icon aria-hidden="false" aria-label="home icon">home</mat-icon>
+                        <mat-icon aria-hidden="false" aria-label="home icon">delete</mat-icon>
+                        <!-- <mat-icon inline='false' svgIcon="delete"> </mat-icon> -->
                     <span> Удалить </span>
                 </div>
                 <!-- <mat-divider color="accent"></mat-divider> -->
@@ -64,7 +67,10 @@
     </p>
 
     <p>
-        <button type="button" (click)='getData()' mat-raised-button color="accent">data</button>
+        <button type="button" (click)='dataJSON()' mat-raised-button color="accent">dataJSON</button>
+    </p>
+    <p>
+        <button type="button" (click)='getData()' mat-raised-button color="accent">Загрузить</button>
     </p>
     <pre>
 {{data.printfData()}}

@@ -5,9 +5,17 @@
 <!--  -->
 <mat-tab-group color="accent" animationDuration="0ms">
     <mat-tab label="Drive">
+        <ng-template mat-tab-label>
+            <mat-icon>storage</mat-icon>
+            <div> Drive </div>
+        </ng-template>
         <app-google-drive></app-google-drive>
     </mat-tab>
     <mat-tab #tab label="History">
+        <ng-template mat-tab-label>
+            <mat-icon>history</mat-icon>
+            <div> История </div>
+        </ng-template>
         <!-- <ng-template mat-tab-label> -->
         <!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
         <!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
@@ -18,6 +26,11 @@
         <app-history></app-history>
     </mat-tab>
     <mat-tab label="Add">
+        <ng-template mat-tab-label>
+            <mat-icon> post_add</mat-icon>
+            <div> Отчет </div>
+        </ng-template>
+
         <app-data-form></app-data-form>
     </mat-tab>
 

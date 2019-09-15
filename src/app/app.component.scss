@@ -2,9 +2,18 @@
 @import '../styles.scss';
 
 
-.mat-tab-label-active{
+.mat-tab-label.mat-tab-label-active{
     color: mat-color($accent, 800);
 }
-.my{
-    color: mat-color($accent) !important;
+.mat-tab-label-content{
+    flex-flow: column wrap !important;
 }
+
+/* Styles for the active tab label */
+// .mat-tab-label.mat-tab-label-active {
+//     // min-width: 25px !important;
+//     // padding: 5px;
+//     // background-color: transparent;
+//     color: red;
+//     // font-weight: 700;
+// }
