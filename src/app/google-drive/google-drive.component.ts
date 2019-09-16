@@ -29,7 +29,7 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
 
   delete$: Subject<string> = new Subject();
   getList$: Subject<number> = new Subject();
-  list$: Subject<File[]> = new Subject();
+  // list$: Subject<File[]> = new Subject();
 
 
 
@@ -73,25 +73,26 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
                 })
               }))
         }),
-        scan((acc, f) => acc.concat(f), []),
+        scan((acc, f) => acc.concat(f), [])
       )
       .subscribe((res) => {
-        this.list$.next(res);
         this.files = res;
         this.cdr.detectChanges();
-      }, null, () => console.log("complite"));
+      },
+        null,
+        () => console.log("complite"));
 
 
 
 
     this.delete$
       .pipe(
-        switchMap(
+        mergeMap(
           (id: string) => this.drive.delete(id)),
         debounceTime(1000)
       )
       .subscribe(res => {
-        
+
         this.getList();
         this.fcName.setValue("");
         this.fcTextarea.setValue("");
@@ -129,11 +130,11 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   fcTextarea: FormControl = new FormControl("");
   fcName: FormControl = new FormControl("");
 
-  delete(i:number) {
-    console.log(i);
-    
-    this.delete$.next(this.files[i].id );
-    this.files.splice(i,1);
+  delete(i: number) {
+    // console.log(i);
+
+    this.delete$.next(this.files[i].id);
+    this.files.splice(i, 1);
     this.cdr.detectChanges();
   }
 
@@ -154,9 +155,9 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   createFile() {
     this.editFile = null;
     console.log(this.fcName.value);
-    
+
     this.drive.create(this.fcName.value, this.fcTextarea.value)
-      .subscribe((res:gapi.client.Response<gapi.client.drive.File>) => {
+      .subscribe((res: gapi.client.Response<gapi.client.drive.File>) => {
         this.editFile = { id: res.result.id, name: res.result.name, mimeType: res.result.mimeType };
         this.getList();
       });
@@ -208,7 +209,7 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
     this.editFile = null;
     this.arr[2019] = 1;
 
-    console.log(this.arr[2018]);
+    console.log(this.auth2.isSignedIn);
 
     // interval(1000).pipe(
     //   debounceTime(500)

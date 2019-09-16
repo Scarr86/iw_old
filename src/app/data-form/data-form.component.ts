@@ -4,6 +4,7 @@ import { DataService } from '../data-service/data.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Data, Item } from '../data-service/data';
+import { BaseService } from '../base-service/dase.service';
 
 
 
@@ -24,7 +25,8 @@ export class DataFormComponent implements OnInit {
     private iconRegistry: MatIconRegistry, 
     private sanitizer: DomSanitizer, 
     private cdr: ChangeDetectorRef, 
-    private dataServise: DataService) {
+    private dataServise: DataService,
+    private base:BaseService) {
     // let deleteIco = iconRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_delete_24px.svg'));
   }
 
@@ -79,7 +81,8 @@ export class DataFormComponent implements OnInit {
 
 
   save() {
-    this.dataServise.save();
+    this.base.getData(new Date());
+    // this.dataServise.save();
 
   }
 

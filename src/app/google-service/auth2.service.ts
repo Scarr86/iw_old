@@ -35,7 +35,6 @@ export class Auth2Service {
                 }).then(() => {
                     this.googleAuth = gapi.auth2.getAuthInstance();
                     console.log("Gapi READY");
-                    
                     resolve();
                 })
                 .catch((err)=>{

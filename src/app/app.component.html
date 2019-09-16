@@ -4,6 +4,15 @@
 
 <!--  -->
 <mat-tab-group color="accent" animationDuration="0ms">
+        <mat-tab label="Add">
+                <ng-template mat-tab-label>
+                    <mat-icon> post_add</mat-icon>
+                    <div> Отчет </div>
+                </ng-template>
+        
+                <app-data-form></app-data-form>
+            </mat-tab>
+        
     <mat-tab label="Drive">
         <ng-template mat-tab-label>
             <mat-icon>storage</mat-icon>
@@ -25,15 +34,7 @@
         <!-- </ng-template> -->
         <app-history></app-history>
     </mat-tab>
-    <mat-tab label="Add">
-        <ng-template mat-tab-label>
-            <mat-icon> post_add</mat-icon>
-            <div> Отчет </div>
-        </ng-template>
-
-        <app-data-form></app-data-form>
-    </mat-tab>
-
+   
 
 </mat-tab-group>
 
