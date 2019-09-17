@@ -85,19 +85,22 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
 
 
 
-    this.delete$
-      .pipe(
-        mergeMap(
-          (id: string) => this.drive.delete(id)),
-        debounceTime(1000)
-      )
-      .subscribe(res => {
+    // this.delete$
+    //   .pipe(
+    //     mergeMap(
+    //       (id: string) => this.drive.delete(id)
+    //     ),
+    //     debounceTime(1000)
+    //   )
+    //   .subscribe(res => {
 
-        this.getList();
-        this.fcName.setValue("");
-        this.fcTextarea.setValue("");
-        this.editFile = null;
-      }, null, () => console.log("Complite"));
+    //     this.getList();
+    //     this.fcName.setValue("");
+    //     this.fcTextarea.setValue("");
+    //     this.editFile = null;
+    //   },
+    //     (err: Error) => console.error(err.message),
+    //     () => console.log("Complite"));
   }
 
   ngOnDestroy() {
@@ -131,11 +134,16 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   fcName: FormControl = new FormControl("");
 
   delete(i: number) {
-    // console.log(i);
 
-    this.delete$.next(this.files[i].id);
-    this.files.splice(i, 1);
-    this.cdr.detectChanges();
+    this.drive.delete(this.files[i].id)
+      .subscribe(
+        () => this.files.splice(i, 1),
+        (err:Error) => console.error(err.message),
+        () => {
+          console.log("Complite")
+          this.cdr.detectChanges();
+        }
+      )
   }
 
   update() {
@@ -154,8 +162,6 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
 
   createFile() {
     this.editFile = null;
-    console.log(this.fcName.value);
-
     this.drive.create(this.fcName.value, this.fcTextarea.value)
       .subscribe((res: gapi.client.Response<gapi.client.drive.File>) => {
         this.editFile = { id: res.result.id, name: res.result.name, mimeType: res.result.mimeType };

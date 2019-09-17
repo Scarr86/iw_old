@@ -1,7 +1,7 @@
 
 /// <reference path="../../../node_modules/@types/gapi.client.drive/index.d.ts" />
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { from, Observable, of, throwError, Observer } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 
 @Injectable()
@@ -50,7 +50,7 @@ export class DriveService {
 
         }
         console.log(data);
-        
+
         if (data === undefined) {
             data = "";
         }
@@ -88,13 +88,16 @@ export class DriveService {
 
 
     delete(id: string) {
-        return from(gapi.client.drive.files.delete({ fileId: id }))
-            .pipe(tap(
-                (res) => console.info(`DELETE   id: ${id}`),
-                (err) => console.error(`DELETE    fail    id: ${id}`, err)
-            ));
+        if (id == "1_K6xMleGXyF1qVwQvryEMoUVtSR3IbWJ")
+            return throwError(new Error("Это моя база!!!"));
+        else
+            return from(gapi.client.drive.files.delete({ fileId: id }))
+                .pipe(tap(
+                    (res) => console.info(`DELETE   id: ${id}`),
+                    (err) => console.error(`DELETE    fail    id: ${id}`, err)
+                ));
     }
-    update(id: string, upd: { name?: string, data?: string }) {
+    update(id: string, upd: { name?: string, data?: string }):Observable<gapi.client.Response<gapi.client.drive.File>> {
         const boundary = '-------314159265358979323846';
         const delimiter = "\r\n--" + boundary + "\r\n";
         const close_delim = "\r\n--" + boundary + "--";
@@ -123,7 +126,7 @@ export class DriveService {
             close_delim;
 
 
-
+      
         return from(gapi.client.request({
             path: '/upload/drive/v3/files/' + id,
             method: 'PATCH',

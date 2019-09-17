@@ -1,6 +1,5 @@
-import { ArrayType } from '@angular/compiler';
+import { Observer, Observable } from 'rxjs';
 
-const idBase: string = " ";
 
 export interface IItem {
     name: string;
@@ -16,17 +15,24 @@ export interface IData {
     other?: any;
 }
 
-
+// export interface IDay extends Array<IData>{
+//     [day:number]: IData;
+// }
 
 export interface IMonth extends Array<IData> {
-    [day: number]: IData;
+    [days: number]: IData;
 }
-export interface IDataBase extends Array<IMonth[]>   {
-    [year: number]: IMonth[];
+export interface IYear extends Array<IMonth>    {
+    [mouths: number]: IMonth;
 }
+export interface IDataBase {
+    [years:string]:IYear;
+}
+  
+
 
 export interface IBase {
     dataBase: IDataBase;
-    getData: (date: Date) => IData;
-    setData: (data: IData) => string | Error;
+    get: (date: Date) => IData;
+    save: (data: IData) => any;
 }

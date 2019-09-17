@@ -3,7 +3,7 @@
 
 
 .mat-tab-label.mat-tab-label-active{
-    color: mat-color($accent, 800);
+    color: mat-color($accent);
 }
 .mat-tab-label-content{
     flex-flow: column wrap !important;

@@ -1,6 +1,6 @@
 <div class="container">
     <p>
-        <span>Дата:</span> {{data.getDateToStr()}}
+        <span>Дата:</span> {{data.date}}
     </p>
     <p>
         <button type="button" (click)='addItems()' mat-raised-button color="accent">add</button>
@@ -16,7 +16,7 @@
                 <!-- <p>
                     {{i+1}} Form Group
                 </p> -->
-                <mat-form-field>
+                <mat-form-field color="accent">
                     <input formControlName="itemName" [matAutocomplete]="auto" autocomplete="off" type="text" matInput
                         placeholder="товар">
                     <mat-autocomplete #auto="matAutocomplete">
@@ -27,17 +27,16 @@
                 </mat-form-field>
 
                 <div>
-                    <mat-form-field>
+                    <mat-form-field color="accent">
                         <input formControlName="price" autocomplete="off" type="number" matInput placeholder="цена">
                     </mat-form-field>
-                    <mat-form-field style="width: 50px">
+                    <mat-form-field style="width: 50px" color="accent">
                         <input formControlName="num" autocomplete="off" type="number" matInput placeholder="кол">
                     </mat-form-field>
                 </div>
 
                 <div style="width: 100%;"></div>
                 <div (click)="deleteItem(i)" class="with-icon">
-                        <mat-icon aria-hidden="false" aria-label="home icon">home</mat-icon>
                         <mat-icon aria-hidden="false" aria-label="home icon">delete</mat-icon>
                         <!-- <mat-icon inline='false' svgIcon="delete"> </mat-icon> -->
                     <span> Удалить </span>
@@ -48,7 +47,7 @@
 
         </div>
 
-        <mat-form-field>
+        <mat-form-field color="accent">
             <input formControlName='sale' autocomplete="off" type="number" matInput placeholder="скидка">
             <!-- <mat-hint>Errors appear instantly!</mat-hint> -->
         </mat-form-field>
@@ -66,13 +65,10 @@
         isSave: {{formGroup.valid}}
     </p>
 
-    <p>
-        <button type="button" (click)='dataJSON()' mat-raised-button color="accent">dataJSON</button>
-    </p>
+
     <p>
         <button type="button" (click)='getData()' mat-raised-button color="accent">Загрузить</button>
     </p>
     <pre>
-{{data.printfData()}}
 </pre>
 </div>
