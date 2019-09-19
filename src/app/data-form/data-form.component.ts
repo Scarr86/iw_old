@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormArray, FormControl, Validators, AbstractControl, FormBuilder, FormGroupDirective } from '@angular/forms';
 import { DataService } from '../data-service/data.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -7,6 +7,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { BaseService, Data, Item } from '../base-service/dase.service';
 import { IData } from '../base-service/base.interface';
 import { Observer, Observable } from 'rxjs';
+import { getLocaleFirstDayOfWeek } from '@angular/common';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 
 
@@ -19,8 +21,9 @@ import { Observer, Observable } from 'rxjs';
 export class DataFormComponent implements OnInit {
 
   formGroup: FormGroup;
-  data: Data = new Data(new Date(), [new Item("test1", 1000, 1)], 0, 0);
-  item: Item;
+  _data: Data; 
+  //= new Data(new Date(), [new Item("test1", 1000, 1)], 0, 0);
+  //item: Item;
   save$: Observable<number>
 
 
@@ -30,41 +33,65 @@ export class DataFormComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
     // private dataServise: DataService,
-    private base: BaseService) {
+    private base: BaseService,
+    private formBuilder: FormBuilder
+  ) {
     // let deleteIco = iconRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('assets/ic_delete_24px.svg'));
+
+  }
+
+  set data(data: Data) {
+    this._data = data;
+    this.sale = data.sale;
+    this.total = data.total;
+    data.items.forEach(i=> this.item = i);
+  }
+  get data(): Data {
+    return this._data;
+  }
+  set sale(s: number) {
+    this.formGroup.get("sale").setValue(s);
+  }
+  set total(t: number) {
+    this.formGroup.get("total").setValue(t);
+  }
+  set item(i: Item) {
+    this.arrayFormGroups.push(this.createItemFormGroup(i));
   }
 
   ngOnInit() {
-    // this.save$ = this.base.save$.asObservable();
-    // this.save$.subscribe(
-    //   res=>(console.log(res))
-    // )
-    // this.data = this.dataServise.data;
     this.base.saveObservable.subscribe(console.log)
-    // this.data.date = new Date(Date.now());
 
-    this.formGroup = new FormGroup({
+    this.formGroup = this.formBuilder.group({
+      'arrayFormGroups': this.formBuilder.array([]),
+      "sale": [null],
+      "total": [null]
+    })
 
-      "arrayFormGroups": new FormArray([
-        new FormGroup({
-          "itemName": new FormControl(this.data.items[0].name),
-          "price": new FormControl(this.data.items[0].price),
-          "num": new FormControl(this.data.items[0].num)
-        })
-      ]),
-      "sale": new FormControl(this.data.sale),
-      "total": new FormControl(this.data.total, [Validators.min(0)])
 
-    });
+    // this.base.get(new Date()).subscribe((d)=>  this.data = d );
+    // this.formGroup = new FormGroup({
 
-    this.formGroup.statusChanges.subscribe(stat => {
-      //this.isSave = stat == "VALID" ? true : false;
-      //console.log(this.formGroup.valid);
-      //this.cdr.detectChanges();
-      //console.log(stat, this.formGroup.controls["total"].value );
-    });
+    //   "arrayFormGroups": new FormArray([
+    //     // new FormGroup({
+    //     //   "itemName": new FormControl(this.data.items[0].name),
+    //     //   "price": new FormControl(this.data.items[0].price),
+    //     //   "num": new FormControl(this.data.items[0].num)
+    //     // })
+    //   ]),
+    //   "sale": new FormControl(this.data.sale),
+    //   "total": new FormControl(this.data.total, [Validators.min(0)])
 
-    this.formGroup.get('arrayFormGroups').valueChanges
+    // });
+
+    // this.formGroup.statusChanges.subscribe(stat => {
+    //   //this.isSave = stat == "VALID" ? true : false;
+    //   //console.log(this.formGroup.valid);
+    //   //this.cdr.detectChanges();
+    //   //console.log(stat, this.formGroup.controls["total"].value );
+    // });
+
+    //this.formGroup.get('arrayFormGroups').valueChanges
 
     // .subscribe((items: any[]) => {
     //   this.data.items = items
@@ -77,55 +104,67 @@ export class DataFormComponent implements OnInit {
     // });
 
 
-    this.formGroup.get("total").valueChanges
+    //this.formGroup.get("total").valueChanges
     // .subscribe((value: number) => {
     //   this.data.total = value;
     // });
 
     this.formGroup.get("sale").valueChanges
-    // .subscribe((value: number) => {
-    //   this.data.sale = value;
-    //   this.formGroup.get('total').setValue(this.data.getTotal());
-    // });
+      .subscribe((value: number) => {
+        this.data.sale = value;
+        console.log(value);
+
+        this.formGroup.get('total').setValue(1);
+      }, null, () => console.log("complite"));
   }
 
 
   save() {
-  
+
 
     this.base.save(this.data);
-    //.subscribe(console.log )
-    //.subscribe(res=>console.log(res));
-    this.data.date.setDate(this.data.date.getDate() + 1);
-    this.data.date.setFullYear(this.data.date.getFullYear()+1);
+    
+    this.data.date.setDate(this.data.date.getDate());
+    this.data.date.setFullYear(this.data.date.getFullYear() + 1);
     this.data.sale++;
-    // this.dataServise.save();
 
   }
 
-  addItems() {
-    // let item: Item = new Item();
-    // this.data.items.push(item);
-    // this.arrayFormGroups.push(new FormGroup({
-    //   "itemName": new FormControl(item.name),
-    //   "price": new FormControl(item.price),
-    //   "num": new FormControl(item.num)
-    // }));
+  addItem() {
+    this.arrayFormGroups.push(this.createItemFormGroup(new Item("", null, null)))
   }
 
   get arrayFormGroups(): FormArray {
     return this.formGroup.get('arrayFormGroups') as FormArray;
   }
 
-
-
   deleteItem(i: number) {
     this.arrayFormGroups.removeAt(i);
   }
 
   getData() {
-    this.base.get(new Date())
 
+    this.base.get(new Date()).subscribe((d) => {
+      this.data = d;
+
+      // this.formGroup = this.formBuilder.group({
+      //   'arrayFormGroups': this.formBuilder.array([]),
+      //   "sale": [this.data.sale],
+      //   "total": [this.data.total, [Validators.min(0), Validators.required]]
+      // })
+
+      // this.data.items.forEach((item) => {
+      //   this.arrayFormGroups.push(this.createItemFormGroup(item));
+      // })
+      // console.log(this.formGroup);
+    });
+  }
+  createItemFormGroup(item: Item): FormGroup {
+    return this.formBuilder.group({
+      "itemName": [item.name],
+      "price": [item.price],
+      "num": [item.num]
+    })
 
   }
 

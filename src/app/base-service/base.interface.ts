@@ -33,6 +33,6 @@ export interface IDataBase {
 
 export interface IBase {
     dataBase: IDataBase;
-    get: (date: Date) => IData;
+    get: (date: Date) => Observable<IData>;
     save: (data: IData) => any;
 }

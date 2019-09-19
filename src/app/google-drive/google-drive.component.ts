@@ -4,7 +4,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, OnDestroy 
 // import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
-import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged, delayWhen, repeatWhen, scan, mergeAll, pluck, repeat } from 'rxjs/operators';
+import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged, delayWhen, repeatWhen, scan, mergeAll, pluck, repeat, reduce } from 'rxjs/operators';
 import { Observable, of, interval, range, fromEvent, Subscribable, Subscription, observable, concat, merge, from, Subject, iif, empty, defer } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
@@ -14,8 +14,8 @@ import { DriveService } from '../google-service/drive.service';
 
 export class File {
   id: string = "";
-  name: string = "";
   mimeType: string = "";
+  name: string = "";
 }
 
 @Component({
@@ -30,6 +30,7 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   delete$: Subject<string> = new Subject();
   getList$: Subject<number> = new Subject();
   // list$: Subject<File[]> = new Subject();
+  list$:Observable<any>;
 
 
 
@@ -180,7 +181,21 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
       });
   }
   getList() {
-    this.getList$.next(1);
+    this.list$ = this.drive.list(1)
+    .pipe(
+      expand((res)=>this.drive.list(1, res.result.nextPageToken)),
+      takeWhile((res)=> !!res.result.nextPageToken, true),
+      pluck("result", 'files'),
+      reduce((acc, f) => acc.concat(f), []),
+      // tap(()=>this.cdr.detectChanges(), ()=>this.cdr.detectChanges()),
+      // map((res)=> res = [...res])
+    )
+    // .subscribe(
+    //   console.log
+      
+    // )
+    //this.getList$.next(1);
+
     // this.files = [];
     // if (this.files$) {
     //   this.files$.unsubscribe();
