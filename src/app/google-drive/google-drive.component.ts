@@ -4,8 +4,8 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, OnDestroy 
 // import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
 // import { NgGapiAuth2Service } from '../ng-gapi-auth2.service';
 
-import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged, delayWhen, repeatWhen, scan, mergeAll, pluck, repeat, reduce } from 'rxjs/operators';
-import { Observable, of, interval, range, fromEvent, Subscribable, Subscription, observable, concat, merge, from, Subject, iif, empty, defer } from 'rxjs';
+import { concatMap, delay, mergeMap, tap, concatMapTo, takeWhile, mapTo, expand, take, filter, switchMap, map, debounceTime, distinctUntilChanged, delayWhen, repeatWhen, scan, mergeAll, pluck, repeat, reduce, switchMapTo, finalize } from 'rxjs/operators';
+import { Observable, of, interval, range, fromEvent, Subscribable, Subscription, observable, concat, merge, from, Subject, iif, empty, defer, BehaviorSubject } from 'rxjs';
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -29,12 +29,9 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
 
   delete$: Subject<string> = new Subject();
   getList$: Subject<number> = new Subject();
-  // list$: Subject<File[]> = new Subject();
-  list$:Observable<any>;
-
-
-
-  isSigned: boolean = false;
+  _list$: BehaviorSubject<any> = new BehaviorSubject([]);
+  _listObs$ = this._list$.asObservable();
+  list$: Observable<any[]>;
 
 
   files: File[] = [];
@@ -51,37 +48,44 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.getList$
-      .pipe(
-        debounceTime(500),
-        switchMap(size => {
-          return this.drive.list(size, "")
-            .pipe(
-              tap(() => this.files.length = 0),
-              expand(res => {
-                if (!!res.result.nextPageToken)
-                  return this.drive.list(size, res.result.nextPageToken);
-                else
-                  return empty();
-              }),
-              map(res => {
-                return res.result.files.map((f): File => {
-                  return {
-                    id: f.id,
-                    name: f.name,
-                    mimeType: f.mimeType
-                  }
-                })
-              }))
-        }),
-        scan((acc, f) => acc.concat(f), [])
-      )
-      .subscribe((res) => {
-        this.files = res;
-        this.cdr.detectChanges();
-      },
-        null,
-        () => console.log("complite"));
+
+    this._list$.subscribe(
+      (l) => {
+        console.log('value', this._list$.getValue());
+      }
+    )
+    
+    // this.getList$
+    //   .pipe(
+    //     debounceTime(500),
+    //     switchMap(size => {
+    //       return this.drive.list(size, "")
+    //         .pipe(
+    //           tap(() => this.files.length = 0),
+    //           expand(res => {
+    //             if (!!res.result.nextPageToken)
+    //               return this.drive.list(size, res.result.nextPageToken);
+    //             else
+    //               return empty();
+    //           }),
+    //           map(res => {
+    //             return res.result.files.map((f): File => {
+    //               return {
+    //                 id: f.id,
+    //                 name: f.name,
+    //                 mimeType: f.mimeType
+    //               }
+    //             })
+    //           }))
+    //     }),
+    //     scan((acc, f) => acc.concat(f), [])
+    //   )
+    //   .subscribe((res) => {
+    //     this.files = res;
+    //     this.cdr.detectChanges();
+    //   },
+    //     null,
+    //     () => console.log("complite"));
 
 
 
@@ -130,18 +134,21 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
 
+
   /******************************************************* */
   fcTextarea: FormControl = new FormControl("");
   fcName: FormControl = new FormControl("");
 
-  delete(i: number) {
+  delete(f: File, i: number) {
 
-    this.drive.delete(this.files[i].id)
+    this.drive.delete(f.id).pipe(
+      tap(() => this._list$.next(f))
+    )
       .subscribe(
         () => this.files.splice(i, 1),
-        (err:Error) => console.error(err.message),
+        (err: Error) => console.error(err.message),
         () => {
-          console.log("Complite")
+          console.log("DELETE Complite")
           this.cdr.detectChanges();
         }
       )
@@ -166,7 +173,9 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
     this.drive.create(this.fcName.value, this.fcTextarea.value)
       .subscribe((res: gapi.client.Response<gapi.client.drive.File>) => {
         this.editFile = { id: res.result.id, name: res.result.name, mimeType: res.result.mimeType };
-        this.getList();
+        this.files.push({ id: res.result.id, name: res.result.name, mimeType: res.result.mimeType });
+        this._list$.next({ id: res.result.id, name: res.result.name, mimeType: res.result.mimeType });
+        // this.getList();
       });
   }
 
@@ -181,54 +190,46 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
       });
   }
   getList() {
-    this.list$ = this.drive.list(1)
-    .pipe(
-      expand((res)=>this.drive.list(1, res.result.nextPageToken)),
-      takeWhile((res)=> !!res.result.nextPageToken, true),
-      pluck("result", 'files'),
-      reduce((acc, f) => acc.concat(f), []),
-      // tap(()=>this.cdr.detectChanges(), ()=>this.cdr.detectChanges()),
-      // map((res)=> res = [...res])
-    )
-    // .subscribe(
-    //   console.log
+  
+    from(this.drive.list(1)).pipe(
+      expand((res) => {
+        // this.cdr.detectChanges();
+        if(!res.result.nextPageToken) return empty();
+        return this.drive.list(1, res.result.nextPageToken)
+      }),
+      pluck('result','files'),
+      scan((acc, f) => acc.concat(f), []),
+    ).subscribe(
+      (fs)=>{ this.files = fs;
+      this.cdr.detectChanges();}
       
-    // )
-    //this.getList$.next(1);
+    )
 
-    // this.files = [];
-    // if (this.files$) {
-    //   this.files$.unsubscribe();
-    //   console.log("UNSUBSCRIBLE");
-    // }
 
-    // this.files$ = this.drive.list(1)
-    //   .pipe(
-    //     tap(() => this.files.length = 0),
-    //     expand(
-    //       res => {
-    //         if (!!res.result.nextPageToken)
-    //           return this.drive.list(1, res.result.nextPageToken)
-    //         else
-    //           return empty();
-    //       }),
-    //     map(res => {
-    //       return res.result.files.map((f): File => {
-    //         return { id: f.id, name: f.name, mimeType: f.mimeType }
-    //       });
-    //     })).subscribe(res => {
-    //       this.files = this.files.concat(res);
-    //       this.cdr.detectChanges();
-    //     }, null, () => { this.files$ = null; });
+
+      // this.drive.list(1)
+      //   .pipe(
+      //     // tap(())
+      //     // takeWhile((res)=> !!res.result.nextPageToken),
+      //     expand((res) => this.drive.list(1, res.result.nextPageToken)),
+      //     takeWhile((res) => !!res.result.nextPageToken, true),
+      //     pluck("result", 'files'),
+      //     scan((acc, f) => acc.concat(f), []),
+      //     tap((fs) => {
+      //       console.log(fs)
+      //       this._list$.next(fs)
+      //       this.files = fs
+      //     }),
+      //   )
+ 
   }
 
-  arr = [];
   clearList() {
     this.files.length = 0;
     this.fcName.setValue("");
     this.fcTextarea.setValue("");
     this.editFile = null;
-    this.arr[2019] = 1;
+
 
     console.log(this.auth2.isSignedIn);
 

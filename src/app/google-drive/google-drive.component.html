@@ -4,11 +4,11 @@
 <button (click)="signOut()" *ngIf="isLoggedIn() " mat-raised-button color="primary">Sign Out</button>
 <button (click)="getList()" mat-raised-button color="primary">Get List</button>
 <button (click)="clearList()" mat-raised-button color="primary">Clear List</button>
-
+<!-- <button (click)="delete(10)"  mat-raised-button color="primary">Delete</button> -->
 <div class="container">
 
     <div class="list">
-        <mat-list *ngFor="let file of list$ | async ;let i = index" style="width: 100%;">
+        <mat-list *ngFor="let file of files ;let i = index" style="width: 100%;">
             <mat-card>
 
                 <mat-list-item>name: {{file.name}}</mat-list-item>
@@ -17,7 +17,7 @@
                 <mat-divider></mat-divider>
                 <mat-list-item>name: {{file.mimeType}}</mat-list-item>
                 <button (click)="getText(file)" mat-raised-button color="primary">Text</button>
-                <button (click)="delete(i)" style=" position: absolute; right: 10px;" mat-raised-button
+                <button (click)="delete(file, i)" style=" position: absolute; right: 10px;" mat-raised-button
                     color="primary">Delete</button>
             </mat-card>
         </mat-list>
@@ -39,4 +39,7 @@
         <textarea #myTa style="width: 100%" cols="10" placeholder="Textarea"></textarea>
 
     </div> -->
+
+
 </div>
+

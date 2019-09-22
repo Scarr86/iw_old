@@ -19,6 +19,7 @@ import { delay } from 'rxjs/operators';
 export class Auth2Service {
     googleAuth: GoogleAuth;
     user: GoogleUser;
+    authToken;
 
     constructor() {
     }
@@ -54,6 +55,9 @@ export class Auth2Service {
             prompt: 'login'
         }).then((googleUser: gapi.auth2.GoogleUser) => {
             this.user = googleUser;
+            this.authToken = googleUser.getAuthResponse().access_token;
+            console.log(this.authToken);
+            
             // this.appRepository.User.add(googleUser.getBasicProfile());
         });
         return from(promise);

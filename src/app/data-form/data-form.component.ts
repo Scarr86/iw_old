@@ -121,12 +121,26 @@ export class DataFormComponent implements OnInit {
 
   save() {
 
-
+    let d = new  Date("2019-09-20T12:09:35.498Z");
+    let json = JSON.stringify(d);
+    let dj:Date = JSON.parse(json, (k, v)=> (new Date(v))); 
+    console.log(d);
+    console.log( json);
+    console.log(dj, dj.getDate());
+    
+    // d.setUTCFullYear(2019);
+    // d.setUTCMonth(8);
+    // d.setUTCDate(20);
+    // d.setUTCHours(23);
+    // // console.log(d.toLocaleString());
+    // // this.data.date = d;
+    // console.log(d.toLocaleString());
+    this.data.date = new Date(2019, 8, 1); 
     this.base.save(this.data);
     
-    this.data.date.setDate(this.data.date.getDate());
-    this.data.date.setFullYear(this.data.date.getFullYear() + 1);
-    this.data.sale++;
+    // this.data.date.setDate(this.data.date.getDate());
+    // this.data.date.setFullYear(this.data.date.getFullYear() + 1);
+    // this.data.sale++;
 
   }
 
@@ -143,8 +157,15 @@ export class DataFormComponent implements OnInit {
   }
 
   getData() {
+    // let d = new Date();
+    // d.setUTCFullYear(2019);
+    // d.setUTCMonth(8);
+    // d.setUTCDate(20);
+    // d.setUTCHours(23);
 
-    this.base.get(new Date()).subscribe((d) => {
+    this.base.get(new Date(2019, 8, 1)).subscribe((d) => {
+      // console.log(d.date.toLocaleString());
+      
       this.data = d;
 
       // this.formGroup = this.formBuilder.group({

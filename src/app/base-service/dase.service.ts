@@ -44,6 +44,8 @@ export class BaseService implements IBase {
           .pipe(map(res => res.status))
       }),
       tap(() => {
+        console.log(this.dataBase);
+        
         console.log(JSON.stringify(this.dataBase, null, 2))
       })
     )
@@ -58,39 +60,30 @@ export class BaseService implements IBase {
   }
 
   get(date: Date) {
+    console.log("q date", date.toString(), date.toLocaleString());
+    
 
     this.drive.text(idBase).pipe(
-      pluck('body'),
-      map((body) => JSON.parse(body, (key, val) => key === 'date' ? new Date(val) : val)),
-      tap((data)=> console.log("tap",data)),
-      switchMap((data)=> pairs(data) ),
-      // map(data => Object.keys(data).map(k => [data[k]]))
+      pluck("body")
     )
       .subscribe(
-        (data) => {
-          // this.dataBase =  data;
-          console.dir(data)
+        (d) => {
+
+          this.dataBase = JSON.parse(d, (k, v) => {
+           k==='date' && console.log(v);
+           return  k === 'date' ? new Date(v) : v;
+          });
+          console.log(date.getFullYear());
+          console.log(date.getMonth());
+          console.log(date.getDate()-1);
+          
+          let data = this.dataBase[date.getFullYear()][date.getMonth()][date.getDate()-1];
+
+          console.log(data);
         }
-
-
-
       )
 
-    let data: Data = new Data(new Date(), [], null, null); 
-    //= this.dataBase[date.getFullYear()]
-    //   && this.dataBase[date.getFullYear()][date.getMonth()]
-    //   && this.dataBase[date.getFullYear()][date.getMonth()][date.getDate() - 1];
-    // console.log("dataService", data);
-
-    // if (data) {
-    //   data = JSON.parse(JSON.stringify(data), (key, val) => {
-    //     if (key === 'date')
-    //       return new Date(val);
-    //     return val
-    //   })
-    // }
-    // else
-    //   data = new Data(date, [], null, null);
+    let data: Data = new Data(new Date(), [], null, null);
 
     return of(data).pipe(delay(1000));
   }
@@ -100,11 +93,11 @@ export class BaseService implements IBase {
 
   save(data: IData) {
 
-    let _data: IData = JSON.parse(JSON.stringify(data), (key, val) => {
-      if (key === 'date')
-        return new Date(val);
-      return val
-    })
+    console.log(data.date.getFullYear());
+    console.log(data.date.getMonth());
+    console.log(data.date.getDate()-1);
+    
+    let _data: IData = JSON.parse(JSON.stringify(data))
 
 
     let year: IYear = this.dataBase[data.date.getFullYear()] ? this.dataBase[data.date.getFullYear()] : new Array(12);

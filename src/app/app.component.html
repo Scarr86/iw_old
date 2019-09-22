@@ -40,4 +40,14 @@
 
 
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->
+
+<button (click)="getList()">Get List</button>
+
+<div *ngFor="let file of list$ | async">
+
+    <div>
+        {{file.name}}
+    </div>
+
+</div>
