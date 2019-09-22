@@ -11,7 +11,7 @@ let token: string = 'ya29.ImGLB1g2gHrwTus1hagAEubcHRldY_-UKUnCfkHklAknvLJ7xHUwCy
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  // encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None //для отмены внешних стилей
 })
 export class AppComponent implements OnInit {
   title = 'irksweekend';
