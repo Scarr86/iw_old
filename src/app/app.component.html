@@ -1,19 +1,45 @@
-<!-- <app-test-material></app-test-material> -->
 
-<!-- <app-google-drive></app-google-drive> -->
+<nav mat-tab-nav-bar animationDuration="0ms" color="accent">
+    <!-- <a mat-tab-link *ngFor="let link of router.config" [routerLink]="['/'+link.path]" routerLinkActive
+        #rta="routerLinkActive" [active]="rta.isActive">
+        {{link.path}}
+    </a> -->
+    <a mat-tab-link routerLink='/sale' routerLinkActive='accent' #rta1="routerLinkActive" [active]="rta1.isActive">
+        <mat-icon> post_add</mat-icon>
+        Sale
+    </a>
+    <a mat-tab-link routerLink='/history' routerLinkActive='accent' #rta2="routerLinkActive" [active]="rta2.isActive">
+        <mat-icon>history</mat-icon>
+        History
+    </a>
+    <a mat-tab-link routerLink='/analysis' routerLinkActive='accent' #rta3="routerLinkActive"
+        [active]="rta3.isActive">
+        <mat-icon> trending_up</mat-icon>
+        Analisys
+    </a>
+    <a mat-tab-link routerLink='/repository' routerLinkActive='accent' #rta4="routerLinkActive"
+        [active]="rta4.isActive">
+        <mat-icon>storage</mat-icon>
+        Drive
+    </a>
 
-<!--  -->
+</nav>
+
+<!-- 
 <mat-tab-group color="accent" animationDuration="0ms">
-        <mat-tab label="Add">
-                <ng-template mat-tab-label>
-                    <mat-icon> post_add</mat-icon>
-                    <div> Отчет </div>
-                </ng-template>
-        
-                <app-data-form></app-data-form>
-            </mat-tab>
-        
-    <mat-tab label="Drive">
+    <mat-tab label="Add">
+
+        <ng-template mat-tab-label>
+            <mat-icon> post_add</mat-icon>
+            <div> Отчет </div>
+        </ng-template>
+        <ng-template matTabContent> -->
+<!-- Content 1 - Loaded: {{getTimeLoaded(1) | date:'medium'}} -->
+<!-- <app-data-form></app-data-form>
+        </ng-template>
+    </mat-tab> -->
+
+<!-- <mat-tab label="Drive">
         <ng-template mat-tab-label>
             <mat-icon>storage</mat-icon>
             <div> Drive </div>
@@ -24,23 +50,23 @@
         <ng-template mat-tab-label>
             <mat-icon>history</mat-icon>
             <div> История </div>
-        </ng-template>
-        <!-- <ng-template mat-tab-label> -->
-        <!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
-        <!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
-        <!-- <div [ngClass]=" {my:tab.isActive}" > -->
-        <!-- Second -->
-        <!-- </div> -->
-        <!-- </ng-template> -->
-        <app-history></app-history>
+        </ng-template> -->
+
+<!-- <ng-template mat-tab-label> -->
+<!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
+<!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
+<!-- <div [ngClass]=" {my:tab.isActive}" > -->
+    
+<!-- Second -->
+<!-- </div> -->
+<!-- </ng-template> -->
+<!-- <app-history></app-history>
     </mat-tab>
-   
-
-</mat-tab-group>
+</mat-tab-group> -->
 
 
 
-<!-- <router-outlet></router-outlet> -->
+<router-outlet></router-outlet>
 
 <button (click)="getList()">Get List</button>
 

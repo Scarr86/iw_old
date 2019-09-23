@@ -2,8 +2,12 @@
 @import '../styles.scss';
 
 
+
 .mat-tab-label.mat-tab-label-active{
-    color: mat-color($accent);
+    color: mat-color($accent) !important;
+}
+.accent{
+    color:mat-color($accent) ;
 }
 .mat-tab-label-content{
     flex-flow: column wrap !important;
