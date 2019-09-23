@@ -29,15 +29,15 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   @ViewChild("btnUpdate", { static: false }) btnUpdate: MatButton;
 
   // getList$: Subject<number> = new Subject();
-  _list$: BehaviorSubject<File[]> = new BehaviorSubject([]);
+  // _list$: BehaviorSubject<File[]> = new BehaviorSubject([]);
   // _listObs$ = this._list$.asObservable();
   list$: Observable<File[]>;
 
-  sub:Subscription;
+  // sub:Subscription;
 
 
-  files: File[] = [];
-  editFile: File;
+  // files: File[] = [];
+  // editFile: File;
 
 
   constructor(
@@ -47,19 +47,12 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
     private file: FileService
   ) {
     console.log('GoogleDriveComponent');
-    this.list$ = this.file.list$;
 
   }
 
   ngOnInit() {
-
-    this.sub = this.list$.pipe(
-      tap(()=>console.log("inner") )
-    )
-    .subscribe()
-
+    this.list$ = this.file.list$;
     // this.list$ = this._list$.asObservable();
-
 
     // this.list$ = this.list$.pipe(
     //   tap((v) => {
@@ -70,9 +63,6 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
     //     // this.cdr.detectChanges();
     //     console.log("unsubscribe $ !")
     //   }))
-
-
-
 
     // this.sub = this.list$
     // .subscribe( );
@@ -133,9 +123,6 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
     //     null,
     //     () => console.log("complite"));
 
-
-
-
     // this.delete$
     //   .pipe(
     //     mergeMap(
@@ -155,7 +142,6 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
     // debugger;
     // this._list$.complete();
     // this._list$.unsubscribe();
@@ -209,39 +195,39 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
   update() {
-    if (this.editFile) {
-      this.btnUpdate.disabled = true;
-      this.drive.update(this.editFile.id, { name: this.fcName.value, data: this.fcTextarea.value })
-        .subscribe(
-          () => {
-            this.btnUpdate.disabled = false;
-            this.getList();
-            this.cdr.detectChanges();
-          }
-        );
-    }
+    // if (this.editFile) {
+    //   this.btnUpdate.disabled = true;
+    //   this.drive.update(this.editFile.id, { name: this.fcName.value, data: this.fcTextarea.value })
+    //     .subscribe(
+    //       () => {
+    //         this.btnUpdate.disabled = false;
+    //         this.getList();
+    //         this.cdr.detectChanges();
+    //       }
+    //     );
+    // }
   }
 
   createFile() {
-    this.editFile = null;
-    this.drive.create(this.fcName.value, this.fcTextarea.value)
-      .subscribe((res: gapi.client.Response<gapi.client.drive.File>) => {
-        this.editFile = { id: res.result.id, name: res.result.name, mimeType: res.result.mimeType };
-        this.files.push({ id: res.result.id, name: res.result.name, mimeType: res.result.mimeType });
-        // this._list$.next({ id: res.result.id, name: res.result.name, mimeType: res.result.mimeType });
-        // this.getList();
-      });
+    // this.editFile = null;
+    // this.drive.create(this.fcName.value, this.fcTextarea.value)
+    //   .subscribe((res: gapi.client.Response<gapi.client.drive.File>) => {
+    //     this.editFile = { id: res.result.id, name: res.result.name, mimeType: res.result.mimeType };
+    //     this.files.push({ id: res.result.id, name: res.result.name, mimeType: res.result.mimeType });
+    //     // this._list$.next({ id: res.result.id, name: res.result.name, mimeType: res.result.mimeType });
+    //     // this.getList();
+    //   });
   }
 
   getText(file: File) {
-    this.editFile = file;
-    this.drive.text(file.id)
-      .pipe(map(res => res.body))
-      .subscribe(text => {
-        this.fcTextarea.setValue(text);
-        this.fcName.setValue(file.name);
-        this.cdr.detectChanges();
-      });
+    // this.editFile = file;
+    // this.drive.text(file.id)
+    //   .pipe(map(res => res.body))
+    //   .subscribe(text => {
+    //     this.fcTextarea.setValue(text);
+    //     this.fcName.setValue(file.name);
+    //     this.cdr.detectChanges();
+    //   });
   }
   getList() {
 
@@ -285,22 +271,24 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
   clearList() {
-    let f = new File;
-    f.id = '1';
-    f.mimeType = "mimeType";
-    f.name = "name"
-    let files = [f]
-    // this._list$.next(files);
-    this._list$.complete();
-    // this._list$.unsubscribe();
-    //this.sub.unsubscribe();
-    this.files.length = 0;
-    this.fcName.setValue("");
-    this.fcTextarea.setValue("");
-    this.editFile = null;
+    // let f = new File;
+    // f.id = '1';
+    // f.mimeType = "mimeType";
+    // f.name = "name"
+    // let files = [f]
+    // // this._list$.next(files);
+    // // this._list$.complete();
+    // // this._list$.unsubscribe();
+    // //this.sub.unsubscribe();
+    // // this.files.length = 0;
+    // this.fcName.setValue("");
+    // this.fcTextarea.setValue("");
+    // this.editFile = null;
+
+    // this.file.deletFile(f.id);
 
 
-    console.log(this.auth2.isSignedIn);
+    // console.log(this.auth2.isSignedIn);
 
     // interval(1000).pipe(
     //   debounceTime(500)

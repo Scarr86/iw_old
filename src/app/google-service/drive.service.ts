@@ -99,7 +99,7 @@ export class DriveService {
                 catchError((err)=>  throwError(new Error(`delete ${err.status}`))),
                 tap(
                             (res) => console.info(`DELETE   id: ${id}`),
-                            (err) => console.error(`DELETE    fail    id: ${id}`, err)
+                            // (err) => console.error(`DELETE    fail    id: ${id}`, err)
                         ),
             );
     }
