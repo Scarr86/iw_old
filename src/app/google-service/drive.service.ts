@@ -21,7 +21,7 @@ export class DriveService {
             'fields': "nextPageToken, files(id, name, mimeType )",
             'pageToken': nextPageToken
         })
-        
+
         // .pipe(tap(
         //     (res) => console.info(`LIST   size ${res.result.files.length}`, res),
         //     (err) => console.error("LIST    fail", err)
@@ -93,15 +93,15 @@ export class DriveService {
         if (id == "1_K6xMleGXyF1qVwQvryEMoUVtSR3IbWJ")
             return throwError(new Error("Это моя база!!!"));
         else
-        return defer(()=> gapi.client.drive.files.delete({ fileId: id }))
-            .pipe(
-                retry(3),
-                catchError((err)=>  throwError(new Error(`delete ${err.status}`))),
-                tap(
-                            (res) => console.info(`DELETE   id: ${id}`),
-                            // (err) => console.error(`DELETE    fail    id: ${id}`, err)
-                        ),
-            );
+            return defer(() => gapi.client.drive.files.delete({ fileId: id }))
+                .pipe(
+                    retry(3),
+                    catchError((err) => throwError(new Error(`delete ${err.status}`))),
+                    tap(
+                        (res) => console.info(`DELETE   id: ${id}`),
+                        // (err) => console.error(`DELETE    fail    id: ${id}`, err)
+                    ),
+                );
     }
     update(id: string, upd: { name?: string, data?: string }): Observable<gapi.client.Response<gapi.client.drive.File>> {
         const boundary = '-------314159265358979323846';

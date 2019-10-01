@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
 // import { GoogleDriveService } from '../google-drive-service/google-drive.service';
 // import { GoogleAuth2Service } from '../google-auth2-service/google-auth2.service';
 // import { GoogleAuthService, GoogleApiService } from 'ng-gapi';
@@ -24,7 +24,7 @@ export class File {
   templateUrl: './google-drive.component.html',
   styleUrls: ['./google-drive.component.scss'],
 })
-export class GoogleDriveComponent implements OnInit, OnDestroy {
+export class GoogleDriveComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild("btnUpdate", { static: false }) btnUpdate: MatButton;
 
@@ -37,7 +37,7 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
 
 
   // files: File[] = [];
-  // editFile: File;
+  editFile: File;
 
 
   constructor(
@@ -49,9 +49,11 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
     console.log('GoogleDriveComponent');
 
   }
+  ngAfterViewInit() {
 
+  }
   ngOnInit() {
-    this.list$ = this.file.list$;
+    this.list$ = this.file.list$
     // this.list$ = this._list$.asObservable();
 
     // this.list$ = this.list$.pipe(
@@ -195,6 +197,7 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
   update() {
+    this.file.updateFile(1, "ssdf", 'sdfdf');
     // if (this.editFile) {
     //   this.btnUpdate.disabled = true;
     //   this.drive.update(this.editFile.id, { name: this.fcName.value, data: this.fcTextarea.value })
@@ -209,6 +212,7 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
   createFile() {
+    this.file.createFile(this.fcName.value, this.fcTextarea.value);
     // this.editFile = null;
     // this.drive.create(this.fcName.value, this.fcTextarea.value)
     //   .subscribe((res: gapi.client.Response<gapi.client.drive.File>) => {
@@ -220,6 +224,9 @@ export class GoogleDriveComponent implements OnInit, OnDestroy {
   }
 
   getText(file: File) {
+    this.file.getText(file.id);
+    // this.file.getText();
+
     // this.editFile = file;
     // this.drive.text(file.id)
     //   .pipe(map(res => res.body))
