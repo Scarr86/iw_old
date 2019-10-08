@@ -22,8 +22,10 @@ export class File {
   selector: 'app-google-drive',
   templateUrl: './google-drive.component.html',
   styleUrls: ['./google-drive.component.scss'],
+
 })
 export class GoogleDriveComponent implements OnInit, OnDestroy {
+
 
   @ViewChild("btnUpdate", { static: false }) btnUpdate: MatButton;
 

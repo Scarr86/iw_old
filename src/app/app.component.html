@@ -4,50 +4,50 @@
 
 <!--  -->
 <mat-tab-group color="accent" animationDuration="0ms">
-        <mat-tab label="Add">
-                <ng-template mat-tab-label>
-                    <mat-icon> post_add</mat-icon>
-                    <div> Отчет </div>
-                </ng-template>
-        
-                <app-data-form></app-data-form>
-            </mat-tab>
-        
-    <mat-tab label="Drive">
-        <ng-template mat-tab-label>
-            <mat-icon>storage</mat-icon>
-            <div> Drive </div>
-        </ng-template>
-        <app-google-drive></app-google-drive>
-    </mat-tab>
-    <mat-tab #tab label="History">
-        <ng-template mat-tab-label>
-            <mat-icon>history</mat-icon>
-            <div> История </div>
-        </ng-template>
-        <!-- <ng-template mat-tab-label> -->
-        <!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
-        <!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
-        <!-- <div [ngClass]=" {my:tab.isActive}" > -->
-        <!-- Second -->
-        <!-- </div> -->
-        <!-- </ng-template> -->
-        <app-history></app-history>
-    </mat-tab>
-   
+  <mat-tab label="Add">
+    <ng-template mat-tab-label>
+      <mat-icon> post_add</mat-icon>
+      <div class="mat-accent">Отчет</div>
+    </ng-template>
 
+    <app-data-form></app-data-form>
+  </mat-tab>
+
+  <mat-tab label="Drive">
+    <ng-template mat-tab-label>
+      <mat-icon>storage</mat-icon>
+      <div>Drive</div>
+    </ng-template>
+    <app-google-drive></app-google-drive>
+  </mat-tab>
+  <mat-tab #tab label="History">
+    <ng-template mat-tab-label>
+      <mat-icon>history</mat-icon>
+      <div>История</div>
+    </ng-template>
+    <!-- <ng-template mat-tab-label> -->
+    <!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
+    <!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
+    <!-- <div [ngClass]=" {my:tab.isActive}" > -->
+    <!-- Second -->
+    <!-- </div> -->
+    <!-- </ng-template> -->
+    <app-history></app-history>
+  </mat-tab>
 </mat-tab-group>
 
-
-
 <!-- <router-outlet></router-outlet> -->
+
+<cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+  <div *cdkVirtualFor="let item of ds" class="example-item">
+    {{ item || "Loading..." }}
+  </div>
+</cdk-virtual-scroll-viewport>
 
 <button (click)="getList()">Get List</button>
 
 <div *ngFor="let file of list$ | async">
-
-    <div>
-        {{file.name}}
-    </div>
-
+  <div>
+    {{ file.name }}
+  </div>
 </div>

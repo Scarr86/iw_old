@@ -1,6 +1,6 @@
 /// <reference path="../../../node_modules/@types/gapi.auth2/index.d.ts" />
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
 
 const API_KEY: string = 'AIzaSyCofOM8sRo0bZRPxjnZxabuOtjuK6xN48o';
@@ -21,28 +21,36 @@ export class Auth2Service {
     user: GoogleUser;
     authToken;
 
-    constructor() {
+    constructor(private zone: NgZone) {
     }
 
     initClient() {
-    
+
         return new Promise((resolve, reject) => {
-            gapi.load('client:auth2', () => {
-                return gapi.client.init({
+            this.zone.run(() => {
+              gapi.load("client:auth2", () => {
+                return gapi.client
+                  .init({
                     apiKey: API_KEY,
                     clientId: CLIENT_ID,
                     discoveryDocs: DISCOVERY_DOCS,
-                    scope: SCOPES,
-                }).then(() => {
+                    scope: SCOPES
+                  })
+                  .then(() => {
                     this.googleAuth = gapi.auth2.getAuthInstance();
                     console.log("Gapi READY");
                     resolve();
-                })
-                .catch((err)=>{
+                  })
+                  .catch(err => {
                     console.error(" Gapi FAIL", err);
                     reject(err);
-                });
+                  });
+              });
             });
+
+
+
+
         });
     }
     get isSignedIn(): boolean {
@@ -57,7 +65,7 @@ export class Auth2Service {
             this.user = googleUser;
             this.authToken = googleUser.getAuthResponse().access_token;
             console.log(this.authToken);
-            
+
             // this.appRepository.User.add(googleUser.getBasicProfile());
         });
         return from(promise);

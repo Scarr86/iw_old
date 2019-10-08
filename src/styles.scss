@@ -7,10 +7,10 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
-@import './app/test-material/test-material.component';
-@mixin my-comp-theme($theme) {
-    @include my-div-theme($theme);
-}
+// @import './app/test-material/test-material.component';
+// @mixin my-comp-theme($theme) {
+//     @include my-div-theme($theme);
+// }
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -24,7 +24,7 @@ $warn:    mat-palette($mat-pink );
 
 // Create the theme object (a Sass map containing all of the palettes).
 
-// $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+// $theme: mat-light-theme($primary, $accent, $warn);
 $theme: mat-dark-theme($primary, $accent, $warn);
 
 // Include theme styles for core and each component used in your app.
@@ -36,7 +36,7 @@ $theme: mat-dark-theme($primary, $accent, $warn);
 body{
     background: mat-color($primary, 900);
     color: mat-color($primary, 50);
-    margin: 0px;
+    // margin: 0px;
 }
 // .mat-tab-label-active{
 //     color: mat-color($accent, 800);

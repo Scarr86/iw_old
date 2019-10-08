@@ -1,45 +1,78 @@
 <p>google-drive works!</p>
 
-<button (click)="signIn()" *ngIf="!isLoggedIn() " mat-raised-button color="primary">Sign In</button>
-<button (click)="signOut()" *ngIf="isLoggedIn() " mat-raised-button color="primary">Sign Out</button>
+<button
+  (click)="signIn()"
+  *ngIf="!isLoggedIn()"
+  mat-raised-button
+  color="primary"
+>
+  Sign In
+</button>
+<button
+  (click)="signOut()"
+  *ngIf="isLoggedIn()"
+  mat-raised-button
+  color="primary"
+>
+  Sign Out
+</button>
 <button (click)="getList()" mat-raised-button color="primary">Get List</button>
-<button (click)="clearList()" mat-raised-button color="primary">Clear List</button>
+<button (click)="clearList()" mat-raised-button color="primary">
+  Clear List
+</button>
 <!-- <button (click)="delete(10)"  mat-raised-button color="primary">Delete</button> -->
+
 <div class="container">
+  <div class="list">
+    <mat-list *ngFor="let file of files; let i = index" style="width: 100%;">
+      <mat-card>
+        <mat-list-item>name: {{ file.name }}</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>id: {{ file.id }}</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>name: {{ file.mimeType }}</mat-list-item>
+        <button (click)="getText(file)" mat-raised-button color="primary">
+          Text
+        </button>
+        <button
+          (click)="delete(file, i)"
+          style=" position: absolute; right: 10px;"
+          mat-raised-button
+          color="primary"
+        >
+          Delete
+        </button>
+      </mat-card>
+    </mat-list>
+  </div>
 
-    <div class="list">
-        <mat-list *ngFor="let file of files ;let i = index" style="width: 100%;">
-            <mat-card>
-
-                <mat-list-item>name: {{file.name}}</mat-list-item>
-                <mat-divider></mat-divider>
-                <mat-list-item>id: {{file.id}}</mat-list-item>
-                <mat-divider></mat-divider>
-                <mat-list-item>name: {{file.mimeType}}</mat-list-item>
-                <button (click)="getText(file)" mat-raised-button color="primary">Text</button>
-                <button (click)="delete(file, i)" style=" position: absolute; right: 10px;" mat-raised-button
-                    color="primary">Delete</button>
-            </mat-card>
-        </mat-list>
-    </div>
-
-
-    <div style="width: 100%;">
-        <mat-form-field color='accent' style="width: 100%;">
-            <input [formControl]="fcName" autocomplete="off" matInput placeholder="Имя файла">
-        </mat-form-field>
-        <mat-form-field color='accent' style="width: 100%;">
-            <textarea [formControl]="fcTextarea" mat-autosize matInput placeholder="Textarea"></textarea>
-        </mat-form-field>
-        <button #btnUpdate (click)="update()" mat-raised-button color="primary">Update</button>
-        <button (click)="createFile()" mat-raised-button color="primary">Create</button>
-    </div>
-    <!-- <div style="width: 30%;">
+  <div style="width: 100%;">
+    <mat-form-field color="accent" style="width: 100%;">
+      <input
+        [formControl]="fcName"
+        autocomplete="off"
+        matInput
+        placeholder="Имя файла"
+      />
+    </mat-form-field>
+    <mat-form-field color="accent" style="width: 100%;">
+      <textarea
+        [formControl]="fcTextarea"
+        mat-autosize
+        matInput
+        placeholder="Textarea"
+      ></textarea>
+    </mat-form-field>
+    <button #btnUpdate (click)="update()" mat-raised-button color="primary">
+      Update
+    </button>
+    <button (click)="createFile()" mat-raised-button color="primary">
+      Create
+    </button>
+  </div>
+  <!-- <div style="width: 30%;">
         <input #myInput autocomplete="off" placeholder="Имя файла">
         <textarea #myTa style="width: 100%" cols="10" placeholder="Textarea"></textarea>
 
     </div> -->
-
-
 </div>
-

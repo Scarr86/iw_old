@@ -27,6 +27,7 @@ export interface IYear extends Array<IMonth>    {
 }
 export interface IDataBase {
     [years:string]:IYear;
+
 }
   
 
