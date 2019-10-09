@@ -1,0 +1,26 @@
+@import '~@angular/material/theming';
+@import '../../../styles.scss';
+
+
+
+.mat-tab-label.mat-tab-label-active{
+    color: mat-color($accent) !important;
+}
+.accent{
+    color:mat-color($accent) ;
+}
+.mat-tab-label-content{
+    flex-flow: column wrap !important;
+}
+
+
+
+.example-viewport {
+    height: 100px;
+    width: 200px;
+    border: 1px solid white;
+  }
+  
+  .example-item {
+    height: 50px;
+  }

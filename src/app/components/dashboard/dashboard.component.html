@@ -1,0 +1,44 @@
+<nav mat-tab-nav-bar animationDuration="0ms" color="accent">
+  <a
+    mat-tab-link
+    routerLink="/dashboard/sale"
+    routerLinkActive="accent"
+    #rta1="routerLinkActive"
+    [active]="rta1.isActive"
+  >
+    <mat-icon> post_add</mat-icon>
+    Sale
+  </a>
+  <a
+    mat-tab-link
+    routerLink="/dashboard/history"
+    routerLinkActive="accent"
+    #rta2="routerLinkActive"
+    [active]="rta2.isActive"
+  >
+    <mat-icon>history</mat-icon>
+    History
+  </a>
+  <a
+    mat-tab-link
+    routerLink="/dashboard/analysis"
+    routerLinkActive="accent"
+    #rta3="routerLinkActive"
+    [active]="rta3.isActive"
+  >
+    <mat-icon> trending_up</mat-icon>
+    Analisys
+  </a>
+  <a
+    mat-tab-link
+    routerLink="/dashboard/repository"
+    routerLinkActive="accent"
+    #rta4="routerLinkActive"
+    [active]="rta4.isActive"
+  >
+    <mat-icon>storage</mat-icon>
+    Drive
+  </a>
+</nav>
+
+<router-outlet></router-outlet>

@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private drive: DriveService,
-    private user: Auth2Service,
+    // private user: Auth2Service,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private _ngZone: NgZone

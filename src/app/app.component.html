@@ -1,29 +1,45 @@
-
-<nav mat-tab-nav-bar animationDuration="0ms" color="accent">
-    <!-- <a mat-tab-link *ngFor="let link of router.config" [routerLink]="['/'+link.path]" routerLinkActive
-        #rta="routerLinkActive" [active]="rta.isActive">
-        {{link.path}}
-    </a> -->
-    <a mat-tab-link routerLink='/sale' routerLinkActive='accent' #rta1="routerLinkActive" [active]="rta1.isActive">
-        <mat-icon> post_add</mat-icon>
-        Sale
-    </a>
-    <a mat-tab-link routerLink='/history' routerLinkActive='accent' #rta2="routerLinkActive" [active]="rta2.isActive">
-        <mat-icon>history</mat-icon>
-        History
-    </a>
-    <a mat-tab-link routerLink='/analysis' routerLinkActive='accent' #rta3="routerLinkActive"
-        [active]="rta3.isActive">
-        <mat-icon> trending_up</mat-icon>
-        Analisys
-    </a>
-    <a mat-tab-link routerLink='/repository' routerLinkActive='accent' #rta4="routerLinkActive"
-        [active]="rta4.isActive">
-        <mat-icon>storage</mat-icon>
-        Drive
-    </a>
-
-</nav>
+<!-- <nav mat-tab-nav-bar animationDuration="0ms" color="accent">
+  <a
+    mat-tab-link
+    routerLink="/sale"
+    routerLinkActive="accent"
+    #rta1="routerLinkActive"
+    [active]="rta1.isActive"
+  >
+    <mat-icon> post_add</mat-icon>
+    Sale
+  </a>
+  <a
+    mat-tab-link
+    routerLink="/history"
+    routerLinkActive="accent"
+    #rta2="routerLinkActive"
+    [active]="rta2.isActive"
+  >
+    <mat-icon>history</mat-icon>
+    History
+  </a>
+  <a
+    mat-tab-link
+    routerLink="/analysis"
+    routerLinkActive="accent"
+    #rta3="routerLinkActive"
+    [active]="rta3.isActive"
+  >
+    <mat-icon> trending_up</mat-icon>
+    Analisys
+  </a>
+  <a
+    mat-tab-link
+    routerLink="/repository"
+    routerLinkActive="accent"
+    #rta4="routerLinkActive"
+    [active]="rta4.isActive"
+  >
+    <mat-icon>storage</mat-icon>
+    Drive
+  </a>
+</nav> -->
 
 <!-- 
 <mat-tab-group color="accent" animationDuration="0ms">
@@ -56,7 +72,7 @@
 <!-- <mat-icon class="example-tab-icon">thumb_up</mat-icon> -->
 <!-- <div [style.color]=" tab.isActive? 'tomato' : 'inherit'" > -->
 <!-- <div [ngClass]=" {my:tab.isActive}" > -->
-    
+
 <!-- Second -->
 <!-- </div> -->
 <!-- </ng-template> -->
@@ -64,11 +80,9 @@
     </mat-tab>
 </mat-tab-group> -->
 
-
-
 <router-outlet></router-outlet>
 
-<cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+<!-- <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
   <div *cdkVirtualFor="let item of ds" class="example-item">
     {{ item || "Loading..." }}
   </div>
@@ -80,4 +94,4 @@
   <div>
     {{ file.name }}
   </div>
-</div>
+</div> -->

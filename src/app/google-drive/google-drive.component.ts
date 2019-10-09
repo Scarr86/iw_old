@@ -9,9 +9,9 @@ import { Observable, of, interval, range, fromEvent, Subscribable, Subscription,
 import { MatTextareaAutosize } from '@angular/material/input';
 import { FormControl, FormControlName } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { Auth2Service } from '../google-service/auth2.service';
 import { DriveService } from '../google-service/drive.service';
 import { FileService } from './file.service';
+import { Auth2Service } from '../service/google/auth2.service';
 
 export class File {
   id: string = "";

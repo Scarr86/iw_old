@@ -1,0 +1,17 @@
+<button
+  (click)="singIn()"
+  *ngIf="!isSignedIn"
+  mat-raised-button
+  color="accent"
+>
+  Войти
+</button>
+
+<button
+  (click)="singOut()"
+  *ngIf="isSignedIn"
+  mat-raised-button
+  color="accent"
+>
+  Выйти
+</button>

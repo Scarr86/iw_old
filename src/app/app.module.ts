@@ -22,9 +22,12 @@ import { HistoryComponent } from './history/history.component';
 
 import { Auth2Service } from './google-service/auth2.service';
 import { DriveService } from './google-service/drive.service';
+import { SigninComponent } from './components/signin/signin.component';
+import { GapiSession } from './service/google/gapi.session';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 
-export function initGapi(gapiSession: Auth2Service) {
+export function initGapi(gapiSession: GapiSession) {
   return () => gapiSession.initClient();
 }
 
@@ -34,7 +37,9 @@ export function initGapi(gapiSession: Auth2Service) {
     TestMaterialComponent,
     GoogleDriveComponent,
     DataFormComponent,
-    HistoryComponent
+    HistoryComponent,
+    SigninComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -47,9 +52,10 @@ export function initGapi(gapiSession: Auth2Service) {
 
   ],
   providers: [
-    { provide: APP_INITIALIZER, useFactory: initGapi, deps: [Auth2Service], multi: true },
-    Auth2Service,
-    DriveService
+    { provide: APP_INITIALIZER, useFactory: initGapi, deps: [GapiSession], multi: true },
+    // Auth2Service,
+    DriveService,
+    GapiSession,
   ],
   bootstrap: [AppComponent]
 })
